@@ -6,7 +6,7 @@ to help your fellow neighbors. The effects of this application could be an incre
 public service.
 
 
-# How to run
+# How to run (install)
 
 - Go to [Releases](https://github.com/cis3296s22/howcanihelp/releases) and download the latest release.
 ![image](https://user-images.githubusercontent.com/48642222/161603166-10096bb2-399f-40e7-8a4c-10b14712e725.png)
