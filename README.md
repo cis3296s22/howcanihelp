@@ -22,13 +22,16 @@ tar -xzf
 # How to contribute
 Follow this project board to know the latest status of the project: [https://trello.com/b/AAawZWti/howcanihelp]([https://trello.com/b/AAawZWti/howcanihelp])  
 
+Prerequisites:
+- Download and Install [Android Studio](https://developer.android.com/studio/)
+- Install [Git](https://github.com/git-guides/install-git)
+
 ### How to build
 - Use this github repository: [https://github.com/cis3296s22/howcanihelp](https://github.com/cis3296s22/howcanihelp) 
-- Specify what branch to use for a more stable release or for cutting edge development.  
-- Use InteliJ 11
-- Specify additional library to download if needed 
-- What file and target to compile and run. 
-- What is expected to happen when the app start. 
+- Clone the repository.
+- Open the cloned directory in Android Studio.
+- Click the hammer icon at the top.
+![image](https://user-images.githubusercontent.com/48642222/161601460-627d1fa3-1e94-45f6-b30f-51fe06af5a12.png)
 
 
 # Product Vision
