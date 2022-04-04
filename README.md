@@ -7,17 +7,22 @@ public service.
 
 
 # How to run
-Provide here instructions on how to use your application.   
-- Download the latest binary from the Release section on the right on GitHub.  
-- On the command line uncompress using
-```
-tar -xzf  
-```
-- On the command line run with
-```
-./hello
-```
-- You will see Hello World! on your terminal. 
+
+- Go to [Releases](https://github.com/cis3296s22/howcanihelp/releases) and download the latest release.
+![image](https://user-images.githubusercontent.com/48642222/161603166-10096bb2-399f-40e7-8a4c-10b14712e725.png)
+- A popup notifying you of an unknown app will show.
+![image](https://user-images.githubusercontent.com/48642222/161603474-a49f486e-16e8-4074-96bf-f957bdbc3f87.png)
+- Click on "Settings"
+![image](https://user-images.githubusercontent.com/48642222/161603628-1cb409f9-808a-4e46-b12b-f42780828371.png)
+- Flick the switch
+![image](https://user-images.githubusercontent.com/48642222/161603760-2d4d1e75-2a70-4f75-aeb8-87000739ee18.png)
+- Navigate backwards to view the following screen.
+![image](https://user-images.githubusercontent.com/48642222/161603915-abce3940-ea92-4258-9661-515f3e5d0f6e.png)
+- Click "Install"
+![image](https://user-images.githubusercontent.com/48642222/161604056-45b44dd3-620c-4e21-ae12-e33788f00d85.png)
+- Click "INSTALL ANYWAY"
+- You can now run the app by launching it like normal.
+
 
 # How to contribute
 Follow this project board to know the latest status of the project: [https://trello.com/b/AAawZWti/howcanihelp]([https://trello.com/b/AAawZWti/howcanihelp])  
