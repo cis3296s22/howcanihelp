@@ -30,8 +30,6 @@ Follow this project board to know the latest status of the project: [https://tre
 - What file and target to compile and run. 
 - What is expected to happen when the app start. 
 
-# Project Proposal
-
 
 # Product Vision
 This application will be FOR most individuals WHO would be able operate basic mobile applications and are in need of help to meet their needs or require small services, THE How Can I Help is an android mobile application THAT provides the connection and communication between people by matching the requests and availability of recipients and donors respectively. UNLIKE the other applications or services that concentrate on other specific elements like food or dating, OUR product provides this service on a broader aspect of personal day to day needs at a moderate cost.  
