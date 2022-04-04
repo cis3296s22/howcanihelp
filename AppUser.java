@@ -17,6 +17,8 @@ package HowCanIHelp;
  * Revision: N/A
  * 
  */
+
+
 public class AppUser {
 
 	// Declare variables
@@ -333,3 +335,6 @@ public class AppUser {
 	}
 
 }
+
+
+//This is a test comment by Ronald to see if I can push and pull to git
