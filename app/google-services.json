@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "481931814084",
+    "project_id": "howcanihelpapp-7794b",
+    "storage_bucket": "howcanihelpapp-7794b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481931814084:android:a2fd86410e43d5f56c5591",
+        "android_client_info": {
+          "package_name": "edu.temple.howcanihelpapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481931814084-1c1rnuilj2k1d4mllhnmpgng3f5hmkdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYNPf9PX4sSJGE5YePHaZAFVWUGbn5VuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481931814084-1c1rnuilj2k1d4mllhnmpgng3f5hmkdg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
