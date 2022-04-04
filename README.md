@@ -27,16 +27,4 @@ Follow this project board to know the latest status of the project: [https://tre
 - What file and target to compile and run. 
 - What is expected to happen when the app start. 
 
-# Project Proposal
 
-
-# Product Vision
-
-
-# Personas
-### Persona 1: 
-### Persona 2: 
-### Persona 3: 
-### Persona 4: 
-
-# Initial list of user features
