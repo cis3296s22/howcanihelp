@@ -1,23 +1,11 @@
 package edu.temple.howcanihelpapp.Firebase;
 
-import com.google.firebase.auth.FirebaseUser;
-
 /**
- * Represents the User in the Firebase backend.
+ * Please implement this interface if you want to test anything User related but do
+ * not want to make use of Firebase backend.
  */
-public class User {
-    // fibaUser <- fiba user <- (fi)re(ba)se user <- firebase user
-    private FirebaseUser fibaUser;
-    User(FirebaseUser fibaUser) {
-        this.fibaUser = fibaUser;
-    }
-
-    public String getDisplayName()
-    { return fibaUser.getDisplayName(); }
-
-    public String getEmail()
-    { return fibaUser.getEmail(); }
-
-    public String getPhoneNumber()
-    { return fibaUser.getPhoneNumber(); }
+public interface User {
+    public String getDisplayName();
+    public String getEmail();
+    public String getPhoneNumber();
 }
