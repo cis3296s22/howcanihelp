@@ -51,18 +51,16 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     User fibaUser = new UserImpl(auth.getCurrentUser());
+                    CreateUserResult res = new CreateUserResult(fibaUser);
                     fibaUser.setName(name, new User.SetNameHandler() {
                         @Override
                         public void handle(boolean success) {
-                            if(success)
-                                handler.onCreateUserSuccess(fibaUser);
-                            else
-                                handler.onCreateUserFailure();
+                            handler.handle(res);
                         }
                     });
                     //fibaUser.setPhoneNumber(phoneNumber);
                 } else {
-                    handler.onCreateUserFailure();
+                    handler.handle(new CreateUserResult(null));
                 }
             }
         });
@@ -74,10 +72,7 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 firebaseAuth.removeAuthStateListener(this);
-                if(isAuthenticated())
-                    handler.onSignOutSuccess();
-                else
-                    handler.onSignOutFailure();
+                handler.handle(!isAuthenticated());
             }
         });
         this.auth.signOut();

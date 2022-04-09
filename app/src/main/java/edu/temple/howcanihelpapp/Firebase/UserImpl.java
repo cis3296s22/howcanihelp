@@ -47,4 +47,9 @@ public class UserImpl implements User {
             }
         }); // Wait until the name is updated.
     }
+
+    @Override
+    public String toString() {
+        return "Name: " + getDisplayName() + "\nEmail: " + getEmail() + "\nPhone number: " + getPhoneNumber() + "\nUid: " + getUid();
+    }
 }
