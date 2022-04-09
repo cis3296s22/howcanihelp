@@ -12,6 +12,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
+        buildConfigField 'boolean', 'USE_FIREBASE_EMULATORS', 'false'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -20,6 +21,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [usesCleartextTraffic:"false"]
+        }
+        debug {
+            debuggable true
+            buildConfigField 'boolean', 'USE_FIREBASE_EMULATORS', 'true'
+            // Otherwise firebase emulator tests fail
+            manifestPlaceholders = [usesCleartextTraffic:"true"]
         }
     }
     compileOptions {

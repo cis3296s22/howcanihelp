@@ -1,11 +1,19 @@
 package edu.temple.howcanihelpapp.Firebase;
 
 public interface AuthenticationHelper {
+    User getUser();
+
     public interface CreateUserHandler {
         void onCreateUserSuccess(User fibaUser);
         void onCreateUserFailure();
     }
 
+    public interface SignOutEventHandler {
+        void onSignOutSuccess();
+        void onSignOutFailure();
+    }
+
     public boolean isAuthenticated();
     public void createUser(String email, String password, String name, String phoneNumber, AuthenticationHelperImpl.CreateUserHandler handler) throws Exception;
+    public void signOut(SignOutEventHandler handler);
 }

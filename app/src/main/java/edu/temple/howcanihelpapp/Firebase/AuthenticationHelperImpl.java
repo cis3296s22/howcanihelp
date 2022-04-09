@@ -6,22 +6,31 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
+import edu.temple.howcanihelpapp.BuildConfig;
+
+/**
+ * The class for production use.
+ */
 public class AuthenticationHelperImpl implements AuthenticationHelper {
+    private static final AuthenticationHelper authenticationHelper = new AuthenticationHelperImpl();
     private FirebaseAuth auth;
-    private FirebaseUser currentUser;
-
-    public AuthenticationHelperImpl() {
+    private AuthenticationHelperImpl() {
+        if (BuildConfig.USE_FIREBASE_EMULATORS)
+            FirebaseAuth.getInstance().useEmulator("10.0.2.2",9099);
         this.auth = FirebaseAuth.getInstance();
-        this.currentUser = auth.getCurrentUser();
+    }
+
+    @Override
+    public User getUser() {
+        return new UserImpl(this.auth.getCurrentUser());
     }
 
     /**
      * @return True if the user is authenticated (signed in).
      */
     public boolean isAuthenticated() {
-        return currentUser != null;
+        return this.auth.getCurrentUser() != null;
     }
 
     /**
@@ -41,12 +50,40 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    UserImpl fibaUser = new UserImpl(auth.getCurrentUser());
-                    handler.onCreateUserSuccess(fibaUser);
+                    User fibaUser = new UserImpl(auth.getCurrentUser());
+                    fibaUser.setName(name, new User.SetNameHandler() {
+                        @Override
+                        public void handle(boolean success) {
+                            if(success)
+                                handler.onCreateUserSuccess(fibaUser);
+                            else
+                                handler.onCreateUserFailure();
+                        }
+                    });
+                    //fibaUser.setPhoneNumber(phoneNumber);
                 } else {
                     handler.onCreateUserFailure();
                 }
             }
         });
+    }
+
+    @Override
+    public void signOut(SignOutEventHandler handler) {
+        this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                firebaseAuth.removeAuthStateListener(this);
+                if(isAuthenticated())
+                    handler.onSignOutSuccess();
+                else
+                    handler.onSignOutFailure();
+            }
+        });
+        this.auth.signOut();
+    }
+
+    public static AuthenticationHelper getInstance() {
+        return authenticationHelper;
     }
 }

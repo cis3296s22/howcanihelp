@@ -1,6 +1,8 @@
 package edu.temple.howcanihelpapp;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
+import android.util.Log;
 
 import org.junit.Test;
 
@@ -9,61 +11,67 @@ import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 import edu.temple.howcanihelpapp.Firebase.User;
 
 public class FirebaseTest {
-    class AuthHelperImplTest implements AuthenticationHelper {
-
-        @Override
-        public boolean isAuthenticated() {
-            return false;
-        }
-
-        @Override
-        public void createUser(String email, String password, String name, String phoneNumber, AuthenticationHelperImpl.CreateUserHandler handler) throws Exception {
-
-        }
-    }
-
-    class UserImplTest implements User {
-
-        @Override
-        public String getDisplayName() {
-            return null;
-        }
-
-        @Override
-        public String getEmail() {
-            return null;
-        }
-
-        @Override
-        public String getPhoneNumber() {
-            return null;
-        }
-    }
 
     @Test
     public void createUser() throws Exception {
-        AuthenticationHelperImpl authHelper = new AuthenticationHelperImpl();
+        AuthenticationHelper authHelper = AuthenticationHelperImpl.getInstance();
         assertTrue("Expect no user to be authenticated before attempting to create a user.", !authHelper.isAuthenticated());
         authHelper.createUser(
-                "mendez.jonathan3099@gmail.com",
+                "mendez.joodnataohan3099@gmail.com",
                 "test1234password",
-                "Jon",
+                "Jondo",
                 "111111111",
                 new AuthenticationHelperImpl.CreateUserHandler() {
                     @Override
                     public void onCreateUserSuccess(User fibaUser) {
-                        System.out.println("Success in creating a user!");
-                        // name
-                        // email
-                        // phoneNumber
-                        // uid
+                        Log.d(
+                                "createUser",
+                                "Success in creating a user!" +
+                                "\nName: " + fibaUser.getDisplayName() +
+                                "\nEmail: " + fibaUser.getEmail() +
+                                "\nPhoneNumber: " + fibaUser.getPhoneNumber() +
+                                "\nUid: " + fibaUser.getUid()
+                        );
                     }
 
                     @Override
                     public void onCreateUserFailure() {
-                        assertTrue("Unsuccessful in creating a user!", false);
+                        Log.w("createUser", "Unsuccessful in creating a user!");
+                        fail("Unsuccessful in creating a user!");
                     }
                 }
+        );
+    }
+
+//    @Test
+//    public void signOutUser() {
+//        AuthenticationHelper authHelper = AuthenticationHelperImpl.getInstance();
+//        authHelper.signOut(new AuthenticationHelper.SignOutEventHandler() {
+//            @Override
+//            public void onSignOutSuccess() {
+//                assertFalse("Expected the user to not be authenticated.", authHelper.isAuthenticated());
+//                Log.d("signOutUser", "The user was signed out.");
+//            }
+//
+//            @Override
+//            public void onSignOutFailure() {
+//                assert(true);
+//            }
+//        });
+//    }
+
+    @Test
+    public void getUserInfo() {
+        AuthenticationHelper authenticationHelper = AuthenticationHelperImpl.getInstance();
+        assertTrue(authenticationHelper.isAuthenticated());
+        User fibaUser = authenticationHelper.getUser();
+        Log.d("getUserInfo: ", String.valueOf(fibaUser.getDisplayName().length()));
+        Log.d("getUserInfo",
+                "Success in getting userinfo" +
+                        "\nName: " + fibaUser.getDisplayName() +
+                        "\nEmail: " + fibaUser.getEmail() +
+                        "\nPhoneNumber: " + fibaUser.getPhoneNumber() +
+                        "\nUid: " + fibaUser.getUid()
         );
     }
 }

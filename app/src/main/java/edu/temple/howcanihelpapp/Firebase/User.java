@@ -5,7 +5,16 @@ package edu.temple.howcanihelpapp.Firebase;
  * not want to make use of Firebase backend.
  */
 public interface User {
+    public interface SetNameHandler {
+        void handle(boolean success);
+    }
+
     public String getDisplayName();
     public String getEmail();
     public String getPhoneNumber();
+    String getUid();
+
+    void setPhoneNumber(String phoneNumber) throws Exception;
+
+    void setName(String name, SetNameHandler handler);
 }
