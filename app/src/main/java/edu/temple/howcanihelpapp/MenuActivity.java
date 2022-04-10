@@ -1,26 +1,18 @@
 package edu.temple.howcanihelpapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentContainerView;
-
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-public class MenuActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MenuActivity extends AppCompatActivity {
     Button request, donate;
+    ImageButton mapbtn;
     TextView welcomeUser;
-    GoogleMap mMap;
     StringBuilder sb;
 
     @Override
@@ -38,23 +30,21 @@ public class MenuActivity extends AppCompatActivity implements OnMapReadyCallbac
         request = (Button) findViewById(R.id.menuRequestButton);
         donate = (Button) findViewById(R.id.menuDonateButton);
         welcomeUser = (TextView) findViewById(R.id.welcomeText);
+        mapbtn = (ImageButton) findViewById(R.id.mapButton);
+
+        // button configs
+        mapbtn.setColorFilter(Color.argb(255, 0, 0, 0));
 
         // make StringBuilder for welcoming app user:
         sb = new StringBuilder(R.string.welcome_user);
         sb.append(R.string.user_name);
         welcomeUser.setText(sb.toString());
 
-        // map
-        SupportMapFragment smf = (SupportMapFragment) getSupportFragmentManager()
-            .findFragmentById(R.id.mapView);
-        assert smf != null;
-        smf.getMapAsync(this);
-
         // declare click listeners:
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // RequestsActivity will be made
+                // redirect to RequestsActivity
                 Intent requestIntent = new Intent(MenuActivity.this, RequestsActivity.class);
                 startActivity(requestIntent);
             }
@@ -62,21 +52,18 @@ public class MenuActivity extends AppCompatActivity implements OnMapReadyCallbac
         donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // DonationsActivity will be made
+                // redirect to DonationsActivity
                 Intent donateIntent = new Intent(MenuActivity.this, DonationsActivity.class);
                 startActivity(donateIntent);
             }
         });
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        // Philadelphia cooordinates, for testing
-        LatLng home = new LatLng(39.980457, -75.155272);
-        mMap.addMarker(
-                new MarkerOptions().position(home).title("Home")
-        );
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(home));
+        mapbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // redirect to MapsActivity
+                Intent mapIntent = new Intent(MenuActivity.this, MapsActivity.class);
+                startActivity(mapIntent);
+            }
+        });
     }
 }
