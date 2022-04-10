@@ -1,14 +1,12 @@
 package edu.temple.howcanihelpapp.Firebase;
 
+import java.util.function.Consumer;
+
 public interface AuthenticationHelper {
     User getUser();
 
-    public interface CreateUserHandler {
-        void handle(CreateUserResult res);
-    }
-
-    public interface SignOutEventHandler {
-        void handle(boolean success);
+    public interface OnCompleteHandler<T> {
+        public void onComplete(T result);
     }
 
     public boolean isAuthenticated();
@@ -19,14 +17,16 @@ public interface AuthenticationHelper {
      * @param password
      * @param name
      * @param phoneNumber
-     * @param handler
+     * @param createUserHandler
      * @throws Exception
      */
-    public void createUser(String email, String password, String name, String phoneNumber, AuthenticationHelperImpl.CreateUserHandler handler) throws Exception;
+    public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws Exception;
+
+    public void signIn(String email, String password, OnCompleteHandler<SignInResult> signInHandler);
 
     /**
      * UI changes can be done in the handler.
-     * @param handler
+     * @param signOutHandler
      */
-    public void signOut(SignOutEventHandler handler);
+    public void signOut(OnCompleteHandler<Boolean> signOutHandler);
 }

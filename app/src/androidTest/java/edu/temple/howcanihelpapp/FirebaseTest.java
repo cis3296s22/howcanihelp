@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 import edu.temple.howcanihelpapp.Firebase.CreateUserResult;
+import edu.temple.howcanihelpapp.Firebase.SignInResult;
 import edu.temple.howcanihelpapp.Firebase.User;
 
 public class FirebaseTest {
@@ -53,20 +54,26 @@ public class FirebaseTest {
     public void resetAuth() throws ExecutionException, InterruptedException {
         CompletableFuture<Boolean> signOutRes = new CompletableFuture<>();
         AuthenticationHelper authenticationHelper = AuthenticationHelperImpl.getInstance();
-        authenticationHelper.signOut(new AuthenticationHelper.SignOutEventHandler() {
-            @Override
-            public void handle(boolean success) {
-                signOutRes.complete(success);
-            }
-        });
+
+        if(!authenticationHelper.isAuthenticated())
+            return;
+
+        authenticationHelper.signOut(result -> signOutRes.complete(result));
 
         if(!signOutRes.get()) {
             fail("Could not sign the user out!\nUser: " + authenticationHelper.getUser().toString());
         }
     }
 
+    /**
+     * Tests the following:
+     * - Creating a user with email and password.
+     * - Signing them out.
+     * - Signing them back in.
+     * @throws Exception
+     */
     @Test
-    public void createUser() throws Exception {
+    public void testAuthenticationHelper() throws Exception {
         CompletableFuture<CreateUserResult> createRes = new CompletableFuture<>();
         AuthenticationHelper authHelper = AuthenticationHelperImpl.getInstance();
         assertTrue("Expect no user to be authenticated before attempting to create a user.", !authHelper.isAuthenticated());
@@ -77,12 +84,7 @@ public class FirebaseTest {
                 user.getPassword(),
                 user.getDisplayName(),
                 user.getPhoneNumber(),
-                new AuthenticationHelperImpl.CreateUserHandler() {
-                    @Override
-                    public void handle(CreateUserResult res) {
-                        createRes.complete(res);
-                    }
-                }
+                result -> createRes.complete(result)
         );
 
         CreateUserResult res = createRes.get();
@@ -97,8 +99,39 @@ public class FirebaseTest {
                             "\nUid: " + fibaUser.getUid()
             );
         } else {
-            Log.w("createUser", "Unsuccessful in creating a user!");
+            switch (res.getFailReason()) {
+                case EmailExists:
+                    Log.w("createUser", "Email is already in use");
+                    break;
+                case WeakPassword:
+                    Log.w("createUser", "Weak password");
+                    break;
+                case MalformedEmail:
+                    Log.w("createUser", "Malformed email");
+                    break;
+                case None:
+                default:
+
+            }
             fail("Unsuccessful in creating a user!");
         }
+
+        CompletableFuture<Boolean> signOutResFuture = new CompletableFuture<>();
+        authHelper.signOut((result) -> {
+            Log.d("signOutRes", String.valueOf(result));
+            signOutResFuture.complete(result);
+        });
+        assertTrue(signOutResFuture.get());
+
+        CompletableFuture<SignInResult> signInResFuture = new CompletableFuture<>();
+        authHelper.signIn(
+                user.getEmail(),
+                user.getPassword(),
+                result -> signInResFuture.complete(result)
+        );
+
+        SignInResult signInResult = signInResFuture.get();
+        if(!signInResult.isSuccessful())
+            fail("Expected the sign in to be successful. Reason: " + signInResult.getFailReason().toString());
     }
 }

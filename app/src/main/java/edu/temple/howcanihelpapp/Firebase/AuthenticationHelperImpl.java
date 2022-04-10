@@ -1,11 +1,17 @@
 package edu.temple.howcanihelpapp.Firebase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import edu.temple.howcanihelpapp.BuildConfig;
 
@@ -40,10 +46,10 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
      * @param password
      * @param name
      * @param phoneNumber
-     * @param handler
+     * @param createUserHandler
      * @throws Exception
      */
-    public void createUser(String email, String password, String name, String phoneNumber, CreateUserHandler handler) throws Exception {
+    public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws Exception {
         if(this.isAuthenticated())
             throw new Exception("Could not create a new user since one is already signed in!");
         this.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -55,24 +61,83 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
                     fibaUser.setName(name, new User.SetNameHandler() {
                         @Override
                         public void handle(boolean success) {
-                            handler.handle(res);
+                            createUserHandler.onComplete(res);
                         }
                     });
                     //fibaUser.setPhoneNumber(phoneNumber);
                 } else {
-                    handler.handle(new CreateUserResult(null));
+                    Exception e = task.getException();
+                    Log.w("createUser_w_EmailPassword", e);
+                    CreateUserResult.CreateUserFailReason failReason;
+                    if(e instanceof FirebaseAuthWeakPasswordException) {
+                        createUserHandler.onComplete(new CreateUserResult(CreateUserResult.CreateUserFailReason.WeakPassword));
+                    } else if(e instanceof FirebaseAuthInvalidCredentialsException) {
+                        createUserHandler.onComplete(new CreateUserResult(CreateUserResult.CreateUserFailReason.MalformedEmail));
+                    } else if(e instanceof FirebaseAuthUserCollisionException) {
+                        createUserHandler.onComplete(new CreateUserResult(CreateUserResult.CreateUserFailReason.EmailExists));
+                    } else {
+                        createUserHandler.onComplete(new CreateUserResult(CreateUserResult.CreateUserFailReason.None));
+                    }
                 }
             }
         });
     }
 
     @Override
-    public void signOut(SignOutEventHandler handler) {
+    public void signIn(String email, String password, OnCompleteHandler<SignInResult> signInHandler) {
+        this.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+                    signInHandler.onComplete(new SignInResult(getUser()));
+                } else {
+                    Exception e = task.getException();
+                    if(e instanceof FirebaseAuthInvalidUserException) {
+                        String errorCode = ((FirebaseAuthInvalidUserException) e).getErrorCode();
+                        Log.d("Error code sign in", errorCode);
+                        switch (errorCode) {
+                            case "ERROR_USER_NOT_FOUND":
+                                signInHandler.onComplete(new SignInResult(SignInResult.SignInFailReason.UserNotFound));
+                                break;
+                            case "ERROR_USER_DISABLED":
+                                signInHandler.onComplete(new SignInResult(SignInResult.SignInFailReason.UserDisabled));
+                                break;
+                            default:
+                                signInHandler.onComplete(new SignInResult(SignInResult.SignInFailReason.None));
+                        }
+                    } else if(e instanceof FirebaseAuthInvalidCredentialsException) {
+                        signInHandler.onComplete(new SignInResult(SignInResult.SignInFailReason.PasswordIncorrect));
+                    } else {
+                        signInHandler.onComplete(new SignInResult(SignInResult.SignInFailReason.None));
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void signOut(OnCompleteHandler<Boolean> signOutHandler) {
         this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            boolean registered = false;
+
+            /**
+             * The function will get triggered for the first time, right after it has been registered as a listener,
+             * and a second time when a sign-out event is triggered.
+             * @param firebaseAuth
+             */
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                firebaseAuth.removeAuthStateListener(this);
-                handler.handle(!isAuthenticated());
+                if(!registered) {
+                    Log.d("SignOut", "Listener registered");
+                    registered = true;
+                    return;
+                }
+                if(isAuthenticated())
+                    return;
+                Log.d("SignOut", "sign out triggered.");
+                auth = firebaseAuth;
+                auth.removeAuthStateListener(this);
+                signOutHandler.onComplete(true);
             }
         });
         this.auth.signOut();
