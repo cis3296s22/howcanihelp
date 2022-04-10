@@ -9,6 +9,9 @@ public interface AuthenticationHelper {
         public void onComplete(T result);
     }
 
+    /**
+     * @return True if the user is authenticated (signed in).
+     */
     public boolean isAuthenticated();
 
     /**

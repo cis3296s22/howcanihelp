@@ -32,23 +32,10 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
         return new UserImpl(this.auth.getCurrentUser());
     }
 
-    /**
-     * @return True if the user is authenticated (signed in).
-     */
     public boolean isAuthenticated() {
         return this.auth.getCurrentUser() != null;
     }
 
-    /**
-     * An example of how to utilize the CreateUserHandler parameter is in the "createUser()" test in the
-     * "androidTest" package.
-     * @param email
-     * @param password
-     * @param name
-     * @param phoneNumber
-     * @param createUserHandler
-     * @throws Exception
-     */
     public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws Exception {
         if(this.isAuthenticated())
             throw new Exception("Could not create a new user since one is already signed in!");
