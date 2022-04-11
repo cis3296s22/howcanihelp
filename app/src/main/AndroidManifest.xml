@@ -42,6 +42,12 @@
             android:label="@string/title_activity_maps" />
 >>>>>>> origin/main
         <activity
+            android:name=".reqItem"
+            android:exported="false" />
+        <activity
+            android:name=".donationSearch"
+            android:exported="false" />
+        <activity
             android:name=".DonationsActivity"
             android:exported="false" />
         <activity
