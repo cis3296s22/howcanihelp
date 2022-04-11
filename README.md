@@ -54,10 +54,20 @@ Heather, age 28, high school education. was recently evicted from her apartment 
 Sam, age 25, currently lives in Pennsylvania. He recently accepted a big job offer and is expected to move to Florida soon for his new job as a software developer. Excited with his new chapter in life, he makes time to move out of his apartment. Although he doesn’t carry a lot of house items, he has an obsession of keeping a lot of clothes, but when he is unable to keep all his clothes he makes a quick decision to donate them. Sam also chooses to donate because he wants to consider donating winter clothes to those in need, since he won’t need them while at his new job. Sam uses the How Can I Help app to look for individuals or services that are actively seeking donations for new clothes; this is also helpful because, despite being in a rush, he is able to quickly communicate with those in need, on one place, without having to spend so much time researching services that may or may not accept clothes. Sam is familiar with technology given his background and is able to manage with the app.
 
 # Initial list of user features
-1. Sign up new users
-2. Sign in for existing users
-3. Matching requests and available donors
-4. In app communication
-5. Scheduling when donors are free
-6. Google Maps connectivity for proximity based search
+Features List:
+1. As a new user, I want to Sign up in the application to register for the app by having an account so that the application has my information for further use
+2. As an existing user, I want to Sign into the application to be able to use it to donate/request and not have to register every time I want to use the app
+3. As a recipient, I want to see if there is any matched request and available donations so    that I can meet my need
+    a. As a user in quick need, I want to see a Preset search where a preset of items is available to tap that are available
+    b. As a user with no education, I want to search for items with the keywords I know so that it could be easy for me to find the items under that 
+       category I want
+4. As a recipient with a matched availability for my request, I want to contact the donor through the app so that I can get the item from them
+5. As a recipient, I want the option to request the item directly mentioning it or choose from the available donations so that it could save time for me 
+   waiting to match
+6. As a donor, I want the option to add the item directly mentioning it or choose to donate the requested items so that it could save time for me waiting 
+   to match
+7. As a donor, I want to put up my schedule of available times so that people would know when they could pick up their matched item(s)
+8. As a user with travel limitations, I want to make a proximity based search using Google Maps connectivity so that I could know what items are available 
+   that are closer to my location
+
 
