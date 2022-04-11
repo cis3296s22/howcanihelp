@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HowCanIHelpApp">
         <activity
+            android:name=".reqItem"
+            android:exported="false" />
+        <activity
+            android:name=".donationSearch"
+            android:exported="false" />
+        <activity
             android:name=".DonationsActivity"
             android:exported="false" />
         <activity
