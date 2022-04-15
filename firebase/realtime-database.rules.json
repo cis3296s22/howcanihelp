@@ -5,6 +5,13 @@
         ".read": "auth != null && $uid === auth.uid",
         ".write": "auth != null && $uid === auth.uid"
       }
+    },
+    "helpListings": {
+      "$id": {
+        ".read": "auth != null",
+        ".write": "auth != null && (!data.exists() || data.child('uid').val() === newData.child('uid').val())",
+        ".validate": "newData.hasChildren(['description', 'isRequest', 'title', 'uid'])"
+      }
     }
   }
 }
