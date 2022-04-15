@@ -4,15 +4,25 @@ import static org.junit.Assert.*;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListing;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 import edu.temple.howcanihelpapp.Firebase.CreateUserResult;
+import edu.temple.howcanihelpapp.Firebase.DatabaseSetResult;
 import edu.temple.howcanihelpapp.Firebase.SignInResult;
 import edu.temple.howcanihelpapp.Firebase.User;
 
@@ -133,5 +143,76 @@ public class FirebaseTest {
         SignInResult signInResult = signInResFuture.get();
         if(!signInResult.isSuccessful())
             fail("Expected the sign in to be successful. Reason: " + signInResult.getFailReason().toString());
+    }
+
+    /**
+     * Test if a user can put an item in the database.
+     */
+    @Test
+    public void RealtimeDatabaseTest() throws Exception {
+        if (BuildConfig.USE_FIREBASE_EMULATORS)
+            FirebaseDatabase.getInstance().useEmulator("10.0.2.2",9000);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        AuthenticationHelper auth = AuthenticationHelperImpl.getInstance();
+        UserI userI = new UserI();
+        CompletableFuture<CreateUserResult> createUserRes = new CompletableFuture<>();
+        auth.createUser(
+                userI.getEmail(),
+                userI.getPassword(),
+                userI.getDisplayName(),
+                userI.getPhoneNumber(),
+                result -> createUserRes.complete(result)
+        );
+
+        CreateUserResult res = createUserRes.get();
+        if(!res.isSuccessful())
+            fail("Failed before database testing started.");
+
+        HelpListing helpListing = new HelpListing(
+                res.getCreatedUser().getUid(),
+                true,
+                "canned food",
+                "I want canned food.",
+                new HelpListing.Location(
+                        "here",
+                        1,
+                        -1
+                ),
+                false,
+                false,
+                null
+        );
+        CompletableFuture<DatabaseSetResult<HelpListing>> databaseSetResult = new CompletableFuture<>();
+
+        /**
+         * Append the help listing to the main list and index it in the user's list.
+         */
+        DatabaseReference helpListingRef = mDatabase.child("helpListings").push();
+        helpListingRef.setValue(helpListing, (err, ref) -> {
+            if(err != null) {
+                Log.d("helpListingPush", "Unsuccessful in pushing to " + helpListingRef.getRoot().getPath() + "\n" + err.getMessage());
+                databaseSetResult.complete(new DatabaseSetResult<HelpListing>(DatabaseSetResult.DatabaseSetFailReason.None));
+                return;
+            }
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.d("onDataChange", "data has changed");
+                    HelpListing helpListingFromDb = snapshot.getValue(HelpListing.class);
+                    databaseSetResult.complete(new DatabaseSetResult<>(helpListingFromDb));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("onCancelled", "cancelled");
+                    databaseSetResult.complete(new DatabaseSetResult<>(DatabaseSetResult.DatabaseSetFailReason.None));
+                }
+            });
+        });
+        DatabaseSetResult<HelpListing> res1 = databaseSetResult.get();
+        if(!res1.isSuccessful())
+            fail("Expected the database set to be successful!");
+        HelpListing gettedHelpListing = res1.getSetData();
+        assertEquals("Title is the same", gettedHelpListing.title, helpListing.title);
     }
 }
