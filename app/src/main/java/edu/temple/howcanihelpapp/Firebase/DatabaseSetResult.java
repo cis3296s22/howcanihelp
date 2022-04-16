@@ -16,6 +16,7 @@ public class DatabaseSetResult<T> {
 
     public DatabaseSetResult(DatabaseSetFailReason failReason) {
         this.failReason = failReason;
+        this.setData = null;
     }
 
     public DatabaseSetResult(T setData) {

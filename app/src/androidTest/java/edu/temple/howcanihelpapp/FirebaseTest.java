@@ -4,13 +4,7 @@ import static org.junit.Assert.*;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +16,10 @@ import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListing;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 import edu.temple.howcanihelpapp.Firebase.CreateUserResult;
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingBuilder;
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingUpdate;
 import edu.temple.howcanihelpapp.Firebase.DatabaseSetResult;
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingDbRef;
 import edu.temple.howcanihelpapp.Firebase.SignInResult;
 import edu.temple.howcanihelpapp.Firebase.User;
 
@@ -67,6 +64,8 @@ public class FirebaseTest {
 
         if(!authenticationHelper.isAuthenticated())
             return;
+        else
+            FirebaseAuth.getInstance().getCurrentUser().delete();
 
         authenticationHelper.signOut(result -> signOutRes.complete(result));
 
@@ -150,9 +149,6 @@ public class FirebaseTest {
      */
     @Test
     public void RealtimeDatabaseTest() throws Exception {
-        if (BuildConfig.USE_FIREBASE_EMULATORS)
-            FirebaseDatabase.getInstance().useEmulator("10.0.2.2",9000);
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         AuthenticationHelper auth = AuthenticationHelperImpl.getInstance();
         UserI userI = new UserI();
         CompletableFuture<CreateUserResult> createUserRes = new CompletableFuture<>();
@@ -168,51 +164,52 @@ public class FirebaseTest {
         if(!res.isSuccessful())
             fail("Failed before database testing started.");
 
-        HelpListing helpListing = new HelpListing(
-                res.getCreatedUser().getUid(),
-                true,
-                "canned food",
-                "I want canned food.",
-                new HelpListing.Location(
-                        "here",
-                        1,
-                        -1
-                ),
-                false,
-                false,
-                null
-        );
-        CompletableFuture<DatabaseSetResult<HelpListing>> databaseSetResult = new CompletableFuture<>();
-
+        HelpListing helpListing = new HelpListingBuilder()
+                .setTitle("canned food")
+                .setDescription("I want canned food.")
+                .setLocation(new HelpListing.Location("here", 1, -1))
+                .getHelpListing();
+        CompletableFuture<DatabaseSetResult<HelpListingDbRef>> databasePushResult = new CompletableFuture<>();
+        Log.v("fd", "1");
         /**
          * Append the help listing to the main list and index it in the user's list.
          */
-        DatabaseReference helpListingRef = mDatabase.child("helpListings").push();
-        helpListingRef.setValue(helpListing, (err, ref) -> {
-            if(err != null) {
-                Log.d("helpListingPush", "Unsuccessful in pushing to " + helpListingRef.getRoot().getPath() + "\n" + err.getMessage());
-                databaseSetResult.complete(new DatabaseSetResult<HelpListing>(DatabaseSetResult.DatabaseSetFailReason.None));
-                return;
-            }
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d("onDataChange", "data has changed");
-                    HelpListing helpListingFromDb = snapshot.getValue(HelpListing.class);
-                    databaseSetResult.complete(new DatabaseSetResult<>(helpListingFromDb));
-                }
+        HelpListingDbRef.pushToDb(helpListing, x -> databasePushResult.complete(x));
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.d("onCancelled", "cancelled");
-                    databaseSetResult.complete(new DatabaseSetResult<>(DatabaseSetResult.DatabaseSetFailReason.None));
-                }
-            });
-        });
-        DatabaseSetResult<HelpListing> res1 = databaseSetResult.get();
+        Log.v("fd", "2");
+        DatabaseSetResult<HelpListingDbRef> res1 = databasePushResult.get();
+
+        Log.v("fd", "3");
         if(!res1.isSuccessful())
             fail("Expected the database set to be successful!");
-        HelpListing gettedHelpListing = res1.getSetData();
+        res1.getSetData().get().uid = "okokokok"; // Attempt to change so as to prove a new copy is returned every get() call
+        HelpListing gettedHelpListing = res1.getSetData().get();
         assertEquals("Title is the same", gettedHelpListing.title, helpListing.title);
+        assertEquals("UID is the same", gettedHelpListing.uid, helpListing.uid);
+
+        // Test again
+        CompletableFuture<DatabaseSetResult<HelpListingDbRef>> databasePushResult2 = new CompletableFuture<>();
+
+        HelpListingUpdate helpListingUpdate = new HelpListingUpdate(helpListing)
+                .update(new HelpListingUpdate.UpdateBuilder() {
+                    @Override
+                    public void builder(HelpListingBuilder update) {
+                        update
+                            .setTitle("Bagged Food")
+                            .setDescription("I wanted to say bagged food.")
+                            .setIsUrgent(true)
+                            .setCanRelocate(false)
+                            .setLocation(new HelpListing.Location("IT is here actually",
+                                    -1,1));
+                    }
+                });
+        String oldKey = res1.getSetData().getKey();
+        res1.getSetData().updateValues(helpListingUpdate, x -> databasePushResult2.complete(x));
+        if(!databasePushResult2.get().isSuccessful())
+            fail();
+        assertEquals("Expected the updated item has the same key as before its update.",
+                databasePushResult2.get().getSetData().getKey(), oldKey);
+        assertEquals("Expected the updated item to have an updated title",
+                databasePushResult2.get().getSetData().get().title, "Bagged Food");
     }
 }
