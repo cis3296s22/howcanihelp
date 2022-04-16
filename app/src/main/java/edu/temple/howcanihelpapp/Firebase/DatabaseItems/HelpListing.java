@@ -29,9 +29,9 @@ public class HelpListing {
     public boolean isUrgent;
     public boolean canRelocate;
     /**
-     * Date time represented in milliseconds. Use new Date(dateTimePostedMs) to get a Date object.
+     * Time represented in milliseconds. Use new Date(timePostedMs) to get a Date object.
      */
-    public long dateTimePostedMs;
+    public long timePostedMs;
 
     public HelpListing() {
 
@@ -47,7 +47,7 @@ public class HelpListing {
      * @param isUrgent
      * @param canRelocate
      */
-    public HelpListing(String uid, boolean isRequest, String title, String description, Location location, boolean isUrgent, boolean canRelocate, long dateTimePostedMs) {
+    public HelpListing(String uid, boolean isRequest, String title, String description, Location location, boolean isUrgent, boolean canRelocate, long timePostedMs) {
         this.uid = uid;
         this.isRequest = isRequest;
         this.title = title;
@@ -55,7 +55,7 @@ public class HelpListing {
         this.location = location;
         this.isUrgent = isUrgent;
         this.canRelocate = canRelocate;
-        this.dateTimePostedMs = dateTimePostedMs;
+        this.timePostedMs = timePostedMs;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class HelpListing {
                 new Location(this.location.address, this.location.latitude, this.location.longitude),
                 this.isUrgent,
                 this.canRelocate,
-                this.dateTimePostedMs
+                this.timePostedMs
         );
     }
 }
