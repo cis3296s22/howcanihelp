@@ -2,8 +2,10 @@
     <string name="app_name">HowCanIHelpApp</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="user_name">Stephen</string>
+    <string name="user_name">User</string>
     <string name="welcome_user">Hello, </string>
     <string name="request">Request Items</string>
     <string name="donate">Donate</string>
+
+
 </resources>
