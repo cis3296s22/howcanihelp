@@ -4,53 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DonationsActivity"
     android:background="@drawable/background_main"
-    app:layout_goneMarginBottom="10dp">
+    tools:context=".DonationsActivity">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/tool_main"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints"
-        >
-
-    <TextView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/donateItem"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Donate an item"
+        app:layout_constraintBottom_toTopOf="@+id/searchReqBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        android:layout_gravity="center"
-        android:fontFamily="cursive"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Donations Page"
-        android:textSize="50sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="156dp" />
+    <Button
+        android:id="@+id/searchReqBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="141dp"
+        android:text="Search for requests near me"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="#B3ADAD" />
 
-        <EditText
-            android:id="@+id/editTextTextPersonName2"
-            android:layout_width="232dp"
-            android:layout_height="84dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enter the Donation category"
-            tools:layout_editor_absoluteX="89dp"
-            tools:layout_editor_absoluteY="317dp" />
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginBottom="24dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="match_parent"
-            android:layout_height="98dp"
-            android:ems="10"
-            android:hint="@string/donate"
-            android:inputType="date" />
-    </LinearLayout>
-
-
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="356dp"
+        android:layout_height="414dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchReqBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
