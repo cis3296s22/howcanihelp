@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class reqItem extends AppCompatActivity {
+public class DonationSearch extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_req_item);
+        setContentView(R.layout.activity_donation_search);
     }
 }

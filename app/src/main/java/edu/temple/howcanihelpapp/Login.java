@@ -59,7 +59,7 @@ public class Login extends AppCompatActivity {
                         if (snapshot.exists()){
                             Long pass = snapshot.child(userName1).child("pass").getValue(Long.class);
                             if (pass.equals(passCheck)){
-                                Intent intent = new Intent(Login.this,FinalPage.class);
+                                Intent intent = new Intent(Login.this,MenuActivity.class);
                                 intent.putExtra("userName",userName1);
                                 startActivity(intent);
                                 Toast.makeText(Login.this,"Right Pass ",Toast.LENGTH_SHORT).show();
@@ -87,6 +87,14 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this,SignUp.class);
+                startActivity(intent);
+            }
+        });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Login.this, MenuActivity.class);
                 startActivity(intent);
             }
         });
