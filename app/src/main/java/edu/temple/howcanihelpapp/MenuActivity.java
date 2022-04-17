@@ -27,18 +27,18 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         // declare variables:
-        request = (Button) findViewById(R.id.menuRequestButton);
-        donate = (Button) findViewById(R.id.menuDonateButton);
+        request = findViewById(R.id.menuRequestButton);
+        donate = findViewById(R.id.menuDonateButton);
         welcomeUser = (TextView) findViewById(R.id.welcomeText);
         mapbtn = (ImageButton) findViewById(R.id.mapButton);
 
         // button configs
         mapbtn.setColorFilter(Color.argb(255, 0, 0, 0));
 
-        // make StringBuilder for welcoming app user:
+        /*// make StringBuilder for welcoming app user:
         sb = new StringBuilder(R.string.welcome_user);
         sb.append(R.string.user_name);
-        welcomeUser.setText(sb.toString());
+        welcomeUser.setText(sb.toString());*/
 
         // declare click listeners:
         request.setOnClickListener(new View.OnClickListener() {
