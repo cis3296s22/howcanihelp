@@ -13,7 +13,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 public class RequestsActivity extends AppCompatActivity {
     Button searchDon, reqItems;
-    GoogleMap mMap;
 
     @Override
     public void onBackPressed() {
@@ -26,8 +25,8 @@ public class RequestsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requests);
 
-        searchDon = (Button) findViewById(R.id.searchDonBtn);
-        reqItems = (Button) findViewById(R.id.requestItem);
+        searchDon = findViewById(R.id.searchDonBtn);
+        reqItems = findViewById(R.id.requestItem);
 
         //map
         SupportMapFragment smf = (SupportMapFragment) getSupportFragmentManager()
