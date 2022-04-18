@@ -86,17 +86,16 @@ public class MapsActivity extends AppCompatActivity implements
         /**
          *  FOR TESTING PURPOSES, GATHER DATA FROM DATABASE
          */
-        // Donor Marker
-        DonorMarker d1 = new DonorMarker(gMap, new RequestInfoPost(
-            "canned food items", 39.983645, -75.156856,
-                "01:30PM 04/11/2022", false, true
-        ));
-
-        // Recipient Marker
-        RecipientMarker r1 = new RecipientMarker(gMap, new RequestInfoPost(
+        RequestInfoPost recipient = new RequestInfoPost(
                 "looking for food", 39.975794, -75.165123,
                 "10:53AM 04/11/2022", true, false
-        ));
+        );
+        RequestInfoPost donor = new RequestInfoPost(
+                "canned food items", 39.983645, -75.156856,
+                "01:30PM 04/11/2022", false, true
+        );
+        DonorMarker d1 = new DonorMarker(gMap, donor);
+        RecipientMarker r1 = new RecipientMarker(gMap, recipient);
 
     }
 

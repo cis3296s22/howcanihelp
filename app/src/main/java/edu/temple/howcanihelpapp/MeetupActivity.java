@@ -64,13 +64,13 @@ public class MeetupActivity extends AppCompatActivity {
                 if (meetupClear) {
                     Intent confirmMeetup = new Intent(MeetupActivity.this, null);
                     confirmMeetup.putExtra("ADDRESS_TO_GEOLOCATION", addrToGeo.toString());
-                    // access to new activity: String getGeo = getIntent().getStringExtra("ADDRESS_TO_GEOLOCATION");
                     startActivity(confirmMeetup);
                 }
             }
         });
 
-        // possible to add method to convert address to geolocation here?!?
+        // before we add the address to the database, get it's geolocation equivalent (coordinates):
+
 
     }
 }
