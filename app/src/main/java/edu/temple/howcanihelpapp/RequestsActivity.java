@@ -50,6 +50,15 @@ public class RequestsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RequestsActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        reqItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RequestsActivity.this, RequestItem.class);
+                startActivity(intent);
             }
         });
     }

@@ -78,6 +78,14 @@ public class SignUp extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        signUpAcc = findViewById(R.id.btnSignUpAcc);
+        signUpAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SignUp.this, MenuActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private boolean checkUser(DataSnapshot snapshot,String user) {

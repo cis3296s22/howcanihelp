@@ -38,7 +38,7 @@ public class DonationsActivity extends AppCompatActivity {
         donItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DonationsActivity.this, RequestSearch.class);
+                Intent intent = new Intent(DonationsActivity.this, DonateItem.class);
                 startActivity(intent);
             }
         });
@@ -48,9 +48,17 @@ public class DonationsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DonationsActivity.this, MenuActivity.class);
+                startActivity(intent);
             }
         });
 
+        searchReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DonationsActivity.this, RequestSearch.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }

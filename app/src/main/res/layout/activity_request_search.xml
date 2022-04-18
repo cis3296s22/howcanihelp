@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_main"
-    tools:context=".DonationSearch">
+    tools:context=".RequestSearch">
 
     <TextView
         android:id="@+id/textView"
@@ -16,26 +16,26 @@
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:text="Search for available donations below here"
+        android:text="Search for the requests made below here"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/donScrollView"
+        app:layout_constraintBottom_toTopOf="@+id/reqScrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Search for available donations below here" />
+        tools:text="Search for the requests made below here" />
 
     <ScrollView
-        android:id="@+id/donScrollView"
+        android:id="@+id/reqScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="195dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="3dp"
-        android:layout_marginBottom="67dp"
-        app:layout_constraintBottom_toTopOf="@+id/donate"
+        android:layout_marginBottom="69dp"
+        app:layout_constraintBottom_toTopOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,16 +47,13 @@
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
         android:layout_marginBottom="52dp"
         android:text="BACK"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/donate"
-        app:layout_constraintHorizontal_bias="0.229"
+        app:layout_constraintHorizontal_bias="0.235"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/donScrollView"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/reqScrollView"
         tools:text="BACK" />
 
     <Button
@@ -65,11 +62,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="9dp"
         android:layout_marginBottom="54dp"
-        android:text="REQUEST"
+        android:text="DONATE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toEndOf="@+id/back"
-        app:layout_constraintTop_toBottomOf="@+id/donScrollView" />
+        app:layout_constraintTop_toBottomOf="@+id/reqScrollView"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/appname"
@@ -82,4 +81,5 @@
         android:textSize="24sp"
         tools:layout_editor_absoluteX="91dp"
         tools:layout_editor_absoluteY="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

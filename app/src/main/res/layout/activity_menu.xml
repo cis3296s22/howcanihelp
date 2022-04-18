@@ -11,37 +11,36 @@
         android:id="@+id/welcomeText"
         android:layout_width="296dp"
         android:layout_height="33dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginTop="140dp"
+        android:gravity="center"
         android:text="@string/welcome_user"
         android:textSize="30sp"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.164" />
 
     <Button
         android:id="@+id/menuRequestButton"
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:padding="10dp"
         android:text="@string/request"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeText" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.23" />
 
     <Button
         android:id="@+id/menuDonateButton"
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="140dp"
         android:padding="10dp"
         android:text="@string/donate"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,13 +50,78 @@
 
     <ImageButton
         android:id="@+id/mapButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="89dp"
+        android:layout_height="93dp"
+        android:layout_marginStart="290dp"
+        android:layout_marginTop="63dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menuDonateButton"
         app:srcCompat="@android:drawable/ic_dialog_map" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="305dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="To get the items you need,  click below"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/menuRequestButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
+        tools:text="To get the items you need,  click below" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="309dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="25dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="To donate any items, please click below"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/menuDonateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menuRequestButton"
+        tools:text="To donate any items, please click below" />
+
+    <TextView
+        android:id="@+id/appname"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="91dp"
+        android:layout_marginEnd="18dp"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:text="How Can I Help?"
+        android:textColor="#673AB7"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/welcomeText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/logout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.407" />
+
+    <ImageButton
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/appname"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_logout_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

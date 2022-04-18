@@ -7,29 +7,29 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class RequestSearch extends AppCompatActivity {
+public class DonateItem extends AppCompatActivity {
 
-    Button back, donate;
+    Button back, submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_search);
+        setContentView(R.layout.activity_donate_item);
 
         back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(RequestSearch.this, DonationsActivity.class);
+                Intent i = new Intent(DonateItem.this, DonationsActivity.class);
                 startActivity(i);
             }
         });
 
-        donate = findViewById(R.id.donate);
-        donate.setOnClickListener(new View.OnClickListener() {
+        submit = findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(RequestSearch.this, ConfirmPage.class);
+                Intent i = new Intent(DonateItem.this, MenuActivity.class);
                 startActivity(i);
             }
         });
