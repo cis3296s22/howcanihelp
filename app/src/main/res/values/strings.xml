@@ -6,6 +6,8 @@
     <string name="welcome_user">Hello, </string>
     <string name="request">Request Items</string>
     <string name="donate">Donate</string>
-
+    <string name="location_permission_denied">How Can I Help?: Location services cannot be accessed. Try again. </string>
+    <string name="permission_required_toast">Location permission required for location services. </string>
+    <string name="permission_rationale_location">How Can I Help?: To access location services, location sharing is required. </string>
 
 </resources>

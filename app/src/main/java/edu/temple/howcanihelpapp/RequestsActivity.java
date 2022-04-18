@@ -7,13 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.maps.GoogleMap;
-
 public class RequestsActivity extends AppCompatActivity {
 
     Button searchDon, reqItems, back;
-    GoogleMap mMap;
-
 
     @Override
     public void onBackPressed() {
@@ -29,13 +25,6 @@ public class RequestsActivity extends AppCompatActivity {
         searchDon = findViewById(R.id.searchDonBtn);
         reqItems = findViewById(R.id.requestItem);
 
-        //map
-        /*
-        SupportMapFragment smf = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapView);
-        assert smf != null;
-        smf.getMapAsync((OnMapReadyCallback) this);
-        */
 
         searchDon.setOnClickListener(new View.OnClickListener() {
             @Override
