@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
     Button request, donate;
-    ImageButton mapbtn;
+    ImageButton mapbtn, logout;
     TextView welcomeUser;
     StringBuilder sb;
 
@@ -31,6 +31,7 @@ public class MenuActivity extends AppCompatActivity {
         donate = findViewById(R.id.menuDonateButton);
         welcomeUser = (TextView) findViewById(R.id.welcomeText);
         mapbtn = (ImageButton) findViewById(R.id.mapButton);
+        logout = findViewById(R.id.logout);
 
         // button configs
         mapbtn.setColorFilter(Color.argb(255, 0, 0, 0));
@@ -63,6 +64,14 @@ public class MenuActivity extends AppCompatActivity {
                 // redirect to MapsActivity
                 Intent mapIntent = new Intent(MenuActivity.this, MapsActivity.class);
                 startActivity(mapIntent);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent logoutIntent = new Intent(MenuActivity.this, Login.class);
+                startActivity(logoutIntent);
             }
         });
     }
