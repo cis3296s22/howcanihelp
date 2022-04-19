@@ -3,7 +3,6 @@ package edu.temple.howcanihelpapp;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,28 +13,7 @@ import android.widget.Toast;
 
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
-import edu.temple.howcanihelpapp.Firebase.SignInResult;
 import edu.temple.howcanihelpapp.Firebase.User;
-import edu.temple.howcanihelpapp.Sql.DBHelper;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-import edu.temple.howcanihelpapp.Firebase.DBHelperF;
-import edu.temple.howcanihelpapp.Sql.DBHelper;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
     EditText userName, password;
@@ -85,7 +63,7 @@ public class Login extends AppCompatActivity {
                             }
                             User user = signResult.getUser();
                             Toast.makeText(Login.this,"You are now logged in" + user.getDisplayName()  + " !", Toast.LENGTH_SHORT).show();
-                            showMenuActivity();
+                            showMenuActivityNoThrow();
                         }
                 );
             }
@@ -103,13 +81,21 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        showMenuActivityNoThrow();
+    }
+
+    void showMenuActivityNoThrow() {
         if(AuthenticationHelperImpl.getInstance().isAuthenticated()) {
             // The user is already signed in, redirect them to the menu activity.
-            showMenuActivity();
+            try {
+                showMenuActivity();
+            } catch (AuthenticationHelper.UnauthenticatedUserException e) {
+                // Not gonna happen if isAuthenticated() == true
+            }
         }
     }
 
-    void showMenuActivity() {
+    void showMenuActivity() throws AuthenticationHelper.UnauthenticatedUserException {
         Log.w("user", AuthenticationHelperImpl.getInstance().getUser().toString());
         startActivity(new Intent(Login.this, MenuActivity.class));
     }

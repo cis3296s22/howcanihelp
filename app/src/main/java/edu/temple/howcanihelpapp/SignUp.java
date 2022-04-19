@@ -1,6 +1,5 @@
 package edu.temple.howcanihelpapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,15 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
-import edu.temple.howcanihelpapp.Firebase.DBHelperF;
 import edu.temple.howcanihelpapp.Firebase.User;
-import edu.temple.howcanihelpapp.Sql.DBHelper;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class SignUp extends AppCompatActivity {
     EditText  number , email,pass,userName;
@@ -42,6 +35,13 @@ public class SignUp extends AppCompatActivity {
                 String number1 = number.getText().toString();
                 String email1 = email.getText().toString();
                 String pass1 = pass.getText().toString();
+
+                if(userName1.length() == 0 || number1.length() == 0 || email1.length() == 0 ||
+                pass1.length() == 0) {
+                    Toast.makeText(SignUp.this, "Please fill out the form!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 try {
                     AuthenticationHelperImpl.getInstance().createUser(
@@ -93,12 +93,12 @@ public class SignUp extends AppCompatActivity {
                                 number.setText("");
                                 email.setText("");
                                 pass.setText("");
-                                showMenuActivity();
+                                showMenuActivityNoThrow();
                             }
                     );
                 } catch (Exception e) {
                     Log.w("sign up", e.getMessage());
-                    showMenuActivity();
+                    showMenuActivityNoThrow();
                 }
             }
         });
@@ -115,13 +115,21 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        showMenuActivityNoThrow();
+    }
+
+    void showMenuActivityNoThrow() {
         if(AuthenticationHelperImpl.getInstance().isAuthenticated()) {
             // The user is already signed in, redirect them to the menu activity.
-            showMenuActivity();
+            try {
+                showMenuActivity();
+            } catch (AuthenticationHelper.UnauthenticatedUserException e) {
+                // Not gonna happen if isAuthenticated() == true
+            }
         }
     }
 
-    void showMenuActivity() {
+    void showMenuActivity() throws AuthenticationHelper.UnauthenticatedUserException {
         Log.w("user", AuthenticationHelperImpl.getInstance().getUser().toString());
         startActivity(new Intent(SignUp.this, MenuActivity.class));
     }

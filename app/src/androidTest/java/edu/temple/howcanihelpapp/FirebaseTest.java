@@ -62,7 +62,7 @@ public class FirebaseTest {
     }
 
     @Before
-    public void resetAuth() throws ExecutionException, InterruptedException {
+    public void resetAuth() throws Exception {
         CompletableFuture<Boolean> signOutRes = new CompletableFuture<>();
         AuthenticationHelper authenticationHelper = AuthenticationHelperImpl.getInstance();
 

@@ -1,9 +1,13 @@
 package edu.temple.howcanihelpapp.Firebase;
 
-import java.util.function.Consumer;
-
 public interface AuthenticationHelper {
-    User getUser();
+    class UnauthenticatedUserException extends Exception {
+
+        public UnauthenticatedUserException(String s) {
+            super(s);
+        }
+    }
+    User getUser() throws UnauthenticatedUserException;
 
     public interface OnCompleteHandler<T> {
         public void onComplete(T result);

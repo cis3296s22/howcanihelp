@@ -28,7 +28,9 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
     }
 
     @Override
-    public User getUser() {
+    public User getUser() throws UnauthenticatedUserException {
+        if(!this.isAuthenticated())
+            throw new UnauthenticatedUserException("There is no authenticated user to get!");
         return new UserImpl(this.auth.getCurrentUser());
     }
 
@@ -76,7 +78,14 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    signInHandler.onComplete(new SignInResult(getUser()));
+                    try {
+                        signInHandler.onComplete(new SignInResult(getUser()));
+                    } catch (Exception e) {
+                        // getUser() is not supposed to be null if the task was successful...
+                        Log.wtf("AuthenticationHelperImpl.signIn", "That was not supposed to happen...", e);
+                        final int RANDOM_ERR_CODE = 127849;
+                        System.exit(RANDOM_ERR_CODE);
+                    }
                 } else {
                     Exception e = task.getException();
                     if(e instanceof FirebaseAuthInvalidUserException) {
