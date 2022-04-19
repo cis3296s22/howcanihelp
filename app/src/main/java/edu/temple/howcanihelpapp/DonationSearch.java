@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 
-public class DonationSearch extends AppCompatActivity {
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingDbRef;
 
+public class DonationSearch extends HelpListingSearch {
+    ListView itemListView;
     Button back, request;
 
     @Override
@@ -33,5 +36,8 @@ public class DonationSearch extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        itemListView = findViewById(R.id.donationListings);
+        HelpListingDbRef.getDonationListings(10, requestListings -> this.updateHelpListingList(itemListView, requestListings));
     }
 }
