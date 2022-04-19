@@ -8,33 +8,25 @@
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/drawable/edit_text_box.xml" value="0.17777777777777778" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/drawable/ic_lock.xml" value="0.17592592592592593" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/drawable/ic_name.xml" value="0.1" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_confirm_page.xml" value="0.18072916666666666" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_donate_item.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_donation_search.xml" value="0.2" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_donations.xml" value="0.2296875" />
+        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_donation_search.xml" value="0.25" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_final_page.xml" value="0.12132725430597771" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_login.xml" value="0.2" />
+        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_login.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_main.xml" value="0.11448834853090173" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_maps.xml" value="0.18072916666666666" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_meetup.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_menu.xml" value="0.25" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_req_item.xml" value="0.2359375" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_request_item.xml" value="0.18072916666666666" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_request_search.xml" value="0.18072916666666666" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_requests.xml" value="0.2359375" />
-        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_sign_up.xml" value="0.176" />
+        <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/activity_sign_up.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/custom_toolbar.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/hamsa/AndroidStudioProjects/HowCanIHelpApp/app/src/main/res/layout/toolbar.xml" value="0.12132725430597771" />
-        <entry key="..\:/Users/shull/howcanihelp-git/app/src/main/res/layout/activity_maps.xml" value="0.12552083333333333" />
-        <entry key="..\:/Users/shull/howcanihelp-git/app/src/main/res/layout/activity_menu.xml" value="0.275" />
-        <entry key="..\:/Users/shull/howcanihelp-git/app/src/main/res/layout/activity_post.xml" value="0.1" />
-        <entry key="..\:/Users/shull/howcanihelp-git/app/src/main/res/layout/activity_test.xml" value="0.275" />
-        <entry key="..\:/Users/shull/howcanihelp-git/app/src/main/res/layout/infowindow.xml" value="0.12552083333333333" />
         <entry key="..\:/Users/shull/howcanihelp/app/src/main/res/layout/activity_login.xml" value="0.275" />
         <entry key="..\:/Users/shull/howcanihelp/app/src/main/res/layout/activity_maps.xml" value="0.1" />
         <entry key="..\:/Users/shull/howcanihelp/app/src/main/res/layout/activity_meetup.xml" value="0.264" />
         <entry key="..\:/Users/shull/howcanihelp/app/src/main/res/layout/activity_menu.xml" value="0.264" />
         <entry key="..\:/Users/shull/howcanihelp/app/src/main/res/layout/toolbar.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_donate_item.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/activity_donations.xml" value="0.2821557971014493" />
+        <entry key="app/src/main/res/layout/activity_request_search.xml" value="0.409375" />
+        <entry key="app/src/main/res/layout/help_listing_list_item.xml" value="0.3932291666666667" />
       </map>
     </option>
   </component>

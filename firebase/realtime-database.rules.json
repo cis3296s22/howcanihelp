@@ -7,8 +7,9 @@
       }
     },
     "helpListings": {
+      ".read": "true",
+      ".indexOn": ["isRequest", "uid"],
       "$id": {
-        ".read": "auth != null",
         ".write": "auth != null && (!data.exists() || data.child('uid').val() === auth.uid)",
         ".validate": "newData.hasChildren(['description', 'isRequest', 'title', 'uid'])"
       }

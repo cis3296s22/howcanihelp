@@ -5,7 +5,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import edu.temple.howcanihelpapp.Firebase.DatabaseHelperImpl;
 import edu.temple.howcanihelpapp.Firebase.DatabaseSetResult;
@@ -15,6 +22,10 @@ public class HelpListingDbRef extends DbRefImpl<HelpListing> {
 
     public interface CompletionListener {
         void onComplete(DatabaseSetResult<HelpListingDbRef> result);
+    }
+
+    public interface GetHelpListingsListener {
+        void onComplete(Map<String, HelpListing> helpListingMap);
     }
 
     HelpListingDbRef(DatabaseReference reference) {
@@ -65,5 +76,29 @@ public class HelpListingDbRef extends DbRefImpl<HelpListing> {
     @Override
     protected HelpListing getFromSnapshot(@NonNull DataSnapshot snapshot) {
         return snapshot.getValue(HelpListing.class);
+    }
+
+    public static void getRequestListings(int numListings, GetHelpListingsListener getRequestListingsListener) {
+        Log.d("getRequestListings", "request listings");
+        Query query = DatabaseHelperImpl.getInstance().getRef("helpListings")
+                .orderByChild("isRequest").equalTo(true).limitToFirst(numListings);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("getRequestListings.onDataChange", "request listings data changed");
+                Map<String, HelpListing> requestListings = new HashMap<>();
+                for(DataSnapshot requestListingSnapshot: snapshot.getChildren()) {
+                    requestListings.put(requestListingSnapshot.getKey(),
+                            requestListingSnapshot.getValue(HelpListing.class));
+                }
+                getRequestListingsListener.onComplete(requestListings);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("getRequestListings", error.getMessage());
+                getRequestListingsListener.onComplete(null);
+            }
+        });
     }
 }
