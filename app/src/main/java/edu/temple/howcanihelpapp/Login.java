@@ -62,7 +62,7 @@ public class Login extends AppCompatActivity {
                                 return;
                             }
                             User user = signResult.getUser();
-                            Toast.makeText(Login.this,"You are now logged in" + user.getDisplayName()  + " !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this,"You are now logged in " + user.getDisplayName()  + " !", Toast.LENGTH_SHORT).show();
                             showMenuActivityNoThrow();
                         }
                 );

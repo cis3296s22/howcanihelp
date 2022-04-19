@@ -93,6 +93,10 @@ public class SignUp extends AppCompatActivity {
                                 number.setText("");
                                 email.setText("");
                                 pass.setText("");
+                                Toast.makeText(
+                                        SignUp.this,
+                                        "Welcome to the app " + fibaUser.getDisplayName() + "!",
+                                        Toast.LENGTH_SHORT).show();
                                 showMenuActivityNoThrow();
                             }
                     );
