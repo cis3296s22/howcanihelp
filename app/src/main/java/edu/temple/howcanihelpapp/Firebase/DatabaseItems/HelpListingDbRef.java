@@ -97,7 +97,7 @@ public class HelpListingDbRef extends DbRefImpl<HelpListing> {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w("getRequestListings", error.getMessage());
-                getRequestListingsListener.onComplete(null);
+                getRequestListingsListener.onComplete(new HashMap<>());
             }
         });
     }

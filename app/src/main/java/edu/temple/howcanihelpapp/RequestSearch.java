@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -88,6 +89,13 @@ public class RequestSearch extends AppCompatActivity {
     }
 
     private void updateList(Map<String, HelpListing> helpListingMap) {
+        if(helpListingMap.size() == 0) {
+            // TODO: Instead of display a Toast after this check, it would probably be better if the view
+            // was updated to say "No listings were found :("
+            Toast.makeText(RequestSearch.this, "No listings were found :(",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         ArrayList<Map.Entry<String, HelpListing>> items = new ArrayList<>(helpListingMap.entrySet());
         HelpListingView itemListAdapter =
                 new HelpListingView(this, android.R.layout.simple_list_item_1, items);
