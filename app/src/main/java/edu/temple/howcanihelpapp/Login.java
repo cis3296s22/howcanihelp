@@ -5,11 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
+import edu.temple.howcanihelpapp.Firebase.SignInResult;
+import edu.temple.howcanihelpapp.Firebase.User;
 import edu.temple.howcanihelpapp.Sql.DBHelper;
 
 import androidx.annotation.NonNull;
@@ -35,8 +41,8 @@ public class Login extends AppCompatActivity {
     EditText userName, password;
     Button btnSubmit;
     TextView createAcc;
-    FirebaseDatabase firebaseDatabase ;
-    DatabaseReference reference;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,42 +50,44 @@ public class Login extends AppCompatActivity {
         userName =findViewById(R.id.text_email);
         password=findViewById(R.id.text_pass);
         btnSubmit = findViewById(R.id.btnSubmit_login);
-        DBHelper dbHelper = new DBHelper(this);
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userName1 = userName.getText().toString();
-                long  passCheck = Long.parseLong(password.getText().toString());
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                reference =firebaseDatabase.getReference("User");
-                Query query = reference.orderByChild("userName").equalTo(userName1);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
-                            Long pass = snapshot.child(userName1).child("pass").getValue(Long.class);
-                            if (pass.equals(passCheck)){
-                                Intent intent = new Intent(Login.this,MenuActivity.class);
-                                intent.putExtra("userName",userName1);
-                                startActivity(intent);
-                                Toast.makeText(Login.this,"Right Pass ",Toast.LENGTH_SHORT).show();
-                            }else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                builder.setCancelable(true);
-                                builder.setTitle("Wrong Credential");
-                                builder.setMessage("Wrong Credential");
-                                builder.show();}
-
-                        }else {
-                            Toast.makeText(Login.this,"No data exists ",Toast.LENGTH_SHORT).show();
+                String userNameVal = userName.getText().toString();
+                String passwordVal = password.getText().toString();
+                if(userNameVal.length() == 0 || passwordVal.length() == 0) {
+                    Toast.makeText(Login.this, "Please fill in the login form.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                AuthenticationHelperImpl.getInstance().signIn(
+                        userName.getText().toString(),
+                        password.getText().toString(),
+                        signResult -> {
+                            if (!signResult.isSuccessful()) {
+                                switch (signResult.getFailReason()) {
+                                    case UserNotFound:
+                                        Toast.makeText(Login.this, "The login information is not associated with any user", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case UserDisabled:
+                                        Toast.makeText(Login.this, "This user account is disabled.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case PasswordIncorrect:
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                        builder.setCancelable(true);
+                                        builder.setTitle("Wrong Credential");
+                                        builder.setMessage("Wrong Credential");
+                                        builder.show();
+                                        break;
+                                }
+                                return;
+                            }
+                            User user = signResult.getUser();
+                            Toast.makeText(Login.this,"You are now logged in" + user.getDisplayName()  + " !", Toast.LENGTH_SHORT).show();
+                            showMenuActivity();
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                );
             }
         });
         createAcc=findViewById(R.id.createAcc);
@@ -90,14 +98,19 @@ public class Login extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Login.this, MenuActivity.class);
-                startActivity(intent);
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(AuthenticationHelperImpl.getInstance().isAuthenticated()) {
+            // The user is already signed in, redirect them to the menu activity.
+            showMenuActivity();
+        }
+    }
 
+    void showMenuActivity() {
+        Log.w("user", AuthenticationHelperImpl.getInstance().getUser().toString());
+        startActivity(new Intent(Login.this, MenuActivity.class));
     }
 }

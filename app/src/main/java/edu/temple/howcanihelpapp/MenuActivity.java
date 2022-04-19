@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 
 public class MenuActivity extends AppCompatActivity {
     Button request, donate;
@@ -70,9 +73,21 @@ public class MenuActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent logoutIntent = new Intent(MenuActivity.this, Login.class);
-                startActivity(logoutIntent);
+                AuthenticationHelperImpl.getInstance().signOut(signOutSuccess -> {
+                    if(!signOutSuccess)
+                        Toast.makeText(MenuActivity.this,
+                                "There was an error signing out.", Toast.LENGTH_SHORT).show();
+                    Intent logoutIntent = new Intent(MenuActivity.this, Login.class);
+                    startActivity(logoutIntent);
+                });
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!AuthenticationHelperImpl.getInstance().isAuthenticated())
+            startActivity(new Intent(MenuActivity.this, Login.class));
     }
 }
