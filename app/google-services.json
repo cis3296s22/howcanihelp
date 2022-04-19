@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "904774969013-hb4gkb18an8obu28gbodf6smj22lo1se.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.temple.howcanihelpapp",
+            "certificate_hash": "4377f40bddb58a7e2fe6c6cf9c2061d67e0b8f7a"
+          }
+        },
+        {
           "client_id": "904774969013-ga1a7gbs91nunb65n20c9sthg7sh90ia.apps.googleusercontent.com",
           "client_type": 3
         }

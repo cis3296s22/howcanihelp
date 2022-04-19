@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,36 +28,7 @@ import edu.temple.howcanihelpapp.Firebase.CreateUserResult;
 import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListing;
 import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingDbRef;
 
-public class RequestSearch extends AppCompatActivity {
-
-    class HelpListingView extends ArrayAdapter {
-        private Context mContext;
-        private ArrayList<Map.Entry<String, HelpListing>> mItems;
-        public HelpListingView(@NonNull Context context, int resource,
-                               ArrayList<Map.Entry<String, HelpListing>> items) {
-            super(context, resource, items);
-            mItems = items;
-            mContext = context;
-        }
-
-        @Override
-        public int getCount() {
-            return mItems.size();
-        }
-
-        @Override
-        public View getView(int position, View helpListingListItem, ViewGroup parent) {
-            Log.d("HelpListingView.getView", "position: " + position);
-            if(helpListingListItem == null)
-                helpListingListItem = LayoutInflater.from(mContext).inflate(
-                        R.layout.help_listing_list_item, parent, false);
-            HelpListing helpListing = mItems.get(position).getValue();
-            TextView title = helpListingListItem.findViewById(R.id.helpListingTitle);
-            title.setText(helpListing.title);
-            return helpListingListItem;
-        }
-    }
-
+public class RequestSearch extends HelpListingSearch {
     ListView itemListView;
     Button back, donate;
 
@@ -83,14 +55,7 @@ public class RequestSearch extends AppCompatActivity {
             }
         });
 
-        itemListView = findViewById(R.id.helpListingList);
-        HelpListingDbRef.getRequestListings(10, requestListings -> updateList(requestListings));
-    }
-
-    private void updateList(Map<String, HelpListing> helpListingMap) {
-        ArrayList<Map.Entry<String, HelpListing>> items = new ArrayList<>(helpListingMap.entrySet());
-        HelpListingView itemListAdapter =
-                new HelpListingView(this, android.R.layout.simple_list_item_1, items);
-        itemListView.setAdapter(itemListAdapter);
+        itemListView = findViewById(R.id.requestListings);
+        HelpListingDbRef.getRequestListings(10, requestListings -> this.updateHelpListingList(itemListView, requestListings));
     }
 }

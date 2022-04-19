@@ -78,8 +78,7 @@ public class HelpListingDbRef extends DbRefImpl<HelpListing> {
         return snapshot.getValue(HelpListing.class);
     }
 
-    public static void getRequestListings(int numListings, GetHelpListingsListener getRequestListingsListener) {
-        Log.d("getRequestListings", "request listings");
+    private static void getHelpListings(boolean isRequest, int numListings, GetHelpListingsListener getHelpListingsListener) {
         Query query = DatabaseHelperImpl.getInstance().getRef("helpListings")
                 .orderByChild("isRequest").equalTo(true).limitToFirst(numListings);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -91,14 +90,23 @@ public class HelpListingDbRef extends DbRefImpl<HelpListing> {
                     requestListings.put(requestListingSnapshot.getKey(),
                             requestListingSnapshot.getValue(HelpListing.class));
                 }
-                getRequestListingsListener.onComplete(requestListings);
+                getHelpListingsListener.onComplete(requestListings);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w("getRequestListings", error.getMessage());
-                getRequestListingsListener.onComplete(null);
+                getHelpListingsListener.onComplete(new HashMap<>());
             }
         });
+    }
+
+    public static void getDonationListings(int numListings, GetHelpListingsListener getDonationListings) {
+        getHelpListings(false, numListings, getDonationListings);
+    }
+
+    public static void getRequestListings(int numListings, GetHelpListingsListener getRequestListingsListener) {
+        Log.d("getRequestListings", "request listings");
+        getHelpListings(true, numListings, getRequestListingsListener);
     }
 }

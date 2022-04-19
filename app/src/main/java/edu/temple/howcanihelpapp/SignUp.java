@@ -1,6 +1,5 @@
 package edu.temple.howcanihelpapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,15 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
-import edu.temple.howcanihelpapp.Firebase.DBHelperF;
 import edu.temple.howcanihelpapp.Firebase.User;
-import edu.temple.howcanihelpapp.Sql.DBHelper;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class SignUp extends AppCompatActivity {
     EditText  number , email,pass,userName;
@@ -42,6 +35,13 @@ public class SignUp extends AppCompatActivity {
                 String number1 = number.getText().toString();
                 String email1 = email.getText().toString();
                 String pass1 = pass.getText().toString();
+
+                if(userName1.length() == 0 || number1.length() == 0 || email1.length() == 0 ||
+                pass1.length() == 0) {
+                    Toast.makeText(SignUp.this, "Please fill out the form!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 try {
                     AuthenticationHelperImpl.getInstance().createUser(
@@ -93,12 +93,16 @@ public class SignUp extends AppCompatActivity {
                                 number.setText("");
                                 email.setText("");
                                 pass.setText("");
-                                showMenuActivity();
+                                Toast.makeText(
+                                        SignUp.this,
+                                        "Welcome to the app " + fibaUser.getDisplayName() + "!",
+                                        Toast.LENGTH_SHORT).show();
+                                showMenuActivity(fibaUser);
                             }
                     );
-                } catch (Exception e) {
+                } catch (AuthenticationHelper.AuthenticatedUserIsPresent e) {
                     Log.w("sign up", e.getMessage());
-                    showMenuActivity();
+                    showMenuActivity(e.user);
                 }
             }
         });
@@ -115,14 +119,19 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(AuthenticationHelperImpl.getInstance().isAuthenticated()) {
-            // The user is already signed in, redirect them to the menu activity.
-            showMenuActivity();
+        showMenuActivityIfAuth();
+    }
+
+    void showMenuActivityIfAuth() {
+        try {
+            showMenuActivity(AuthenticationHelperImpl.getInstance().getUser());
+        } catch (AuthenticationHelper.UnauthenticatedUserException e) {
+            // Do nothing
         }
     }
 
-    void showMenuActivity() {
-        Log.w("user", AuthenticationHelperImpl.getInstance().getUser().toString());
+    void showMenuActivity(User user) {
+        Log.w("user", user.toString());
         startActivity(new Intent(SignUp.this, MenuActivity.class));
     }
 }
