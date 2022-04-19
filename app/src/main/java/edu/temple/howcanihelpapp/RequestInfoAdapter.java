@@ -23,14 +23,20 @@ public class RequestInfoAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(@NonNull Marker marker) {
         View view = context.getLayoutInflater().inflate(R.layout.infowindow, null);
 
-        TextView infoItem = view.findViewById(R.id.info_item);
-        TextView infoPosted = view.findViewById(R.id.info_posted);
-        TextView infoLocation = view.findViewById(R.id.info_location);
+        TextView infoItem = (TextView) view.findViewById(R.id.info_item);
+        TextView infoPosted = (TextView) view.findViewById(R.id.info_posted);
+        TextView infoLocation = (TextView) view.findViewById(R.id.info_location);
+        TextView infoIsUrgent = (TextView) view.findViewById(R.id.urgentText);
+        TextView infoIsRelocatable = (TextView) view.findViewById(R.id.ableToMoveText);
 
-        infoItem.setText(marker.getTitle());
-        infoPosted.setText(marker.getSnippet());
+        RequestInfoPost selected = (RequestInfoPost) marker.getTag();
+        assert selected != null;
 
-        infoLocation.setText("TEST LOCATION");
+        infoItem.setText(selected.title);
+        infoPosted.setText(selected.dateTimePosted);
+        infoLocation.setText(selected.latlng.toString());
+        infoIsUrgent.setText((selected.urgent) ? "URGENT" : "");
+        infoIsRelocatable.setText((selected.ableToRelocate) ? "ABLE TO RELOCATE" : "");
 
         return view;
     }

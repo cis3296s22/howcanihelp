@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,8 +25,7 @@ import edu.temple.howcanihelpapp.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener {
+        GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
     // for location purposes
     private GoogleMap gMap;
@@ -108,9 +108,11 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
+        RequestInfoPost clicked = (RequestInfoPost) marker.getTag();
+        assert clicked != null;
+
         Intent intent = new Intent(MapsActivity.this, PostActivity.class);
-        intent.putExtra("WINDOW_NAME", marker.getTitle());
-        intent.putExtra("WINDOW_DATETIME", marker.getSnippet());
+        intent.putExtra("WINDOW_POST", clicked);
         startActivity(intent);
     }
 
