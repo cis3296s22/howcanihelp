@@ -38,9 +38,9 @@ public class AuthenticationHelperImpl implements AuthenticationHelper {
         return this.auth.getCurrentUser() != null;
     }
 
-    public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws Exception {
+    public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws AuthenticatedUserIsPresent {
         if(this.isAuthenticated())
-            throw new Exception("Could not create a new user since one is already signed in!");
+            throw new AuthenticatedUserIsPresent(new UserImpl(this.auth.getCurrentUser()), "Could not create a new user since one is already signed in!");
         this.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

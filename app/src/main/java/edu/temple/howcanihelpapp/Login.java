@@ -63,7 +63,7 @@ public class Login extends AppCompatActivity {
                             }
                             User user = signResult.getUser();
                             Toast.makeText(Login.this,"You are now logged in " + user.getDisplayName()  + " !", Toast.LENGTH_SHORT).show();
-                            showMenuActivityNoThrow();
+                            showMenuActivity(user);
                         }
                 );
             }
@@ -81,22 +81,19 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        showMenuActivityNoThrow();
+        showMenuActivityIfAuth();
     }
 
-    void showMenuActivityNoThrow() {
-        if(AuthenticationHelperImpl.getInstance().isAuthenticated()) {
-            // The user is already signed in, redirect them to the menu activity.
-            try {
-                showMenuActivity();
-            } catch (AuthenticationHelper.UnauthenticatedUserException e) {
-                // Not gonna happen if isAuthenticated() == true
-            }
+    void showMenuActivityIfAuth() {
+        try {
+            showMenuActivity(AuthenticationHelperImpl.getInstance().getUser());
+        } catch (AuthenticationHelper.UnauthenticatedUserException e) {
+            // Do nothing
         }
     }
 
-    void showMenuActivity() throws AuthenticationHelper.UnauthenticatedUserException {
-        Log.w("user", AuthenticationHelperImpl.getInstance().getUser().toString());
+    void showMenuActivity(User user) {
+        Log.w("user", user.toString());;
         startActivity(new Intent(Login.this, MenuActivity.class));
     }
 }

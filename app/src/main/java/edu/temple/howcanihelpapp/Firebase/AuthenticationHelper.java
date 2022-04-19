@@ -7,6 +7,15 @@ public interface AuthenticationHelper {
             super(s);
         }
     }
+
+    class AuthenticatedUserIsPresent extends Exception {
+        public User user;
+        public AuthenticatedUserIsPresent(User user, String s) {
+            super(s);
+            this.user = user;
+        }
+    }
+
     User getUser() throws UnauthenticatedUserException;
 
     public interface OnCompleteHandler<T> {
@@ -27,7 +36,7 @@ public interface AuthenticationHelper {
      * @param createUserHandler
      * @throws Exception
      */
-    public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws Exception;
+    public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws AuthenticatedUserIsPresent;
 
     public void signIn(String email, String password, OnCompleteHandler<SignInResult> signInHandler);
 

@@ -97,12 +97,12 @@ public class SignUp extends AppCompatActivity {
                                         SignUp.this,
                                         "Welcome to the app " + fibaUser.getDisplayName() + "!",
                                         Toast.LENGTH_SHORT).show();
-                                showMenuActivityNoThrow();
+                                showMenuActivity(fibaUser);
                             }
                     );
-                } catch (Exception e) {
+                } catch (AuthenticationHelper.AuthenticatedUserIsPresent e) {
                     Log.w("sign up", e.getMessage());
-                    showMenuActivityNoThrow();
+                    showMenuActivity(e.user);
                 }
             }
         });
@@ -119,22 +119,19 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        showMenuActivityNoThrow();
+        showMenuActivityIfAuth();
     }
 
-    void showMenuActivityNoThrow() {
-        if(AuthenticationHelperImpl.getInstance().isAuthenticated()) {
-            // The user is already signed in, redirect them to the menu activity.
-            try {
-                showMenuActivity();
-            } catch (AuthenticationHelper.UnauthenticatedUserException e) {
-                // Not gonna happen if isAuthenticated() == true
-            }
+    void showMenuActivityIfAuth() {
+        try {
+            showMenuActivity(AuthenticationHelperImpl.getInstance().getUser());
+        } catch (AuthenticationHelper.UnauthenticatedUserException e) {
+            // Do nothing
         }
     }
 
-    void showMenuActivity() throws AuthenticationHelper.UnauthenticatedUserException {
-        Log.w("user", AuthenticationHelperImpl.getInstance().getUser().toString());
+    void showMenuActivity(User user) {
+        Log.w("user", user.toString());
         startActivity(new Intent(SignUp.this, MenuActivity.class));
     }
 }
