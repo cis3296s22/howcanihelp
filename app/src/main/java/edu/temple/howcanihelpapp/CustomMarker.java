@@ -21,9 +21,8 @@ public class CustomMarker {
 
     private Marker getInstance() {
         Marker m = Objects.requireNonNull(gMap.addMarker(new MarkerOptions()
-                .position(rip.latlng).title(rip.title)
-                .snippet(rip.dateTimePosted)));
-        m.setTag((rip.urgent ? "U" : "O"));
+                .position(rip.latlng)));
+        m.setTag(rip);
         return m;
     }
 

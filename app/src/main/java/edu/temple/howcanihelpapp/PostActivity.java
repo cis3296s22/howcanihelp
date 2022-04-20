@@ -14,6 +14,12 @@ public class PostActivity extends AppCompatActivity {
     Button makeRequest;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        PostActivity.this.finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
