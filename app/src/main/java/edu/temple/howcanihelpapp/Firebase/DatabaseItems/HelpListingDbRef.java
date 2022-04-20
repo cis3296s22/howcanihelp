@@ -80,7 +80,7 @@ public class HelpListingDbRef extends DbRefImpl<HelpListing> {
 
     private static void getHelpListings(boolean isRequest, int numListings, GetHelpListingsListener getHelpListingsListener) {
         Query query = DatabaseHelperImpl.getInstance().getRef("helpListings")
-                .orderByChild("isRequest").equalTo(true).limitToFirst(numListings);
+                .orderByChild("isRequest").equalTo(isRequest).limitToFirst(numListings);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
