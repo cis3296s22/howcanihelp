@@ -1,14 +1,35 @@
 package edu.temple.howcanihelpapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class RequestSearch extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
+import edu.temple.howcanihelpapp.Firebase.CreateUserResult;
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListing;
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingDbRef;
+
+public class RequestSearch extends HelpListingSearch {
+    ListView itemListView;
     Button back, donate;
 
     @Override
@@ -33,5 +54,8 @@ public class RequestSearch extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        itemListView = findViewById(R.id.requestListings);
+        HelpListingDbRef.getRequestListings(10, requestListings -> this.updateHelpListingList(itemListView, requestListings));
     }
 }

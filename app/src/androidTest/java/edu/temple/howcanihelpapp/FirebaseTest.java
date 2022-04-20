@@ -4,11 +4,15 @@ import static org.junit.Assert.*;
 
 import android.util.Log;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -58,7 +62,7 @@ public class FirebaseTest {
     }
 
     @Before
-    public void resetAuth() throws ExecutionException, InterruptedException {
+    public void resetAuth() throws Exception {
         CompletableFuture<Boolean> signOutRes = new CompletableFuture<>();
         AuthenticationHelper authenticationHelper = AuthenticationHelperImpl.getInstance();
 
@@ -197,6 +201,7 @@ public class FirebaseTest {
                         update
                             .setTitle("Bagged Food")
                             .setDescription("I wanted to say bagged food.")
+                            .setAsRequest()
                             .setIsUrgent(true)
                             .setCanRelocate(false)
                             .setLocation(new HelpListing.Location("IT is here actually",
@@ -211,5 +216,18 @@ public class FirebaseTest {
                 databasePushResult2.get().getSetData().getKey(), oldKey);
         assertEquals("Expected the updated item to have an updated title",
                 databasePushResult2.get().getSetData().get().title, "Bagged Food");
+
+        CompletableFuture<Void> isDone3 = new CompletableFuture<>();
+        HelpListingDbRef.getRequestListings(10, new HelpListingDbRef.GetHelpListingsListener() {
+            @Override
+            public void onComplete(Map<String, HelpListing> helpListingMap) {
+                assertNotNull(helpListingMap);
+                helpListingMap.forEach((key, val) -> {
+                    Log.d("dfada", "Key: " + key + " | Value: " + val.title + " | isRequest: " + Boolean.toString(val.isRequest));
+                });
+                isDone3.complete(null);
+            }
+        });
+        isDone3.get();
     }
 }

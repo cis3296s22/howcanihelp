@@ -1,29 +1,23 @@
 package edu.temple.howcanihelpapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.temple.howcanihelpapp.Firebase.DBHelperF;
-import edu.temple.howcanihelpapp.Sql.DBHelper;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
+import edu.temple.howcanihelpapp.Firebase.User;
 
 public class SignUp extends AppCompatActivity {
     EditText  number , email,pass,userName;
     TextView login;
-    DBHelper dbHelper;
-    private DBHelperF dbHelperFS ;
-    private DatabaseReference myRef;
-    private FirebaseDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +28,6 @@ public class SignUp extends AppCompatActivity {
         pass=findViewById(R.id.textPass);
 
         Button signUpAcc = findViewById(R.id.btnSignUpAcc);
-        dbHelper = new DBHelper(this);
         signUpAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,32 +35,75 @@ public class SignUp extends AppCompatActivity {
                 String number1 = number.getText().toString();
                 String email1 = email.getText().toString();
                 String pass1 = pass.getText().toString();
-                long password = Long.parseLong(pass1)  ;
-                database = FirebaseDatabase.getInstance();
-                myRef = database.getReference("User");
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (checkUser(snapshot,userName1)){
-                            DBHelperF dbHelperFS = new DBHelperF(userName1,number1,email1,password);
-                            myRef.child(userName1.toString()).setValue(dbHelperFS);
-                            userName.setText("");
-                            number.setText("");
-                            email.setText("");
-                            pass.setText("");
-                            Toast.makeText(SignUp.this,"Data inserted",Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(SignUp.this,Login.class);
-                            startActivity(i);
-                        }else {
-                            Toast.makeText(SignUp.this,"User Name Already Exists",Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                if(userName1.length() == 0 || number1.length() == 0 || email1.length() == 0 ||
+                pass1.length() == 0) {
+                    Toast.makeText(SignUp.this, "Please fill out the form!",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    }
-                });
+                try {
+                    AuthenticationHelperImpl.getInstance().createUser(
+                            email1,
+                            pass1,
+                            userName1,
+                            number1,
+                            createUserResult -> {
+                                if(!createUserResult.isSuccessful()) {
+                                    switch (createUserResult.getFailReason()) {
+                                        case EmailExists:
+                                            Toast.makeText(
+                                                    SignUp.this,
+                                                    "The email is already in use!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case WeakPassword:
+                                            Toast.makeText(
+                                                    SignUp.this,
+                                                    "Choose a stronger password!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case MalformedEmail:
+                                            Toast.makeText(
+                                                    SignUp.this,
+                                                    "Choose a valid email address!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case None:
+                                        default:
+                                            Toast.makeText(
+                                                    SignUp.this,
+                                                    "Uh-oh this was not supposed to happen!",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Log.w("createUser", "Uh-oh this was not supposed to happen!");
+                                    }
+                                    return;
+                                }
+                                User fibaUser = createUserResult.getCreatedUser();
+                                Log.d(
+                                        "createUser",
+                                        "Success in creating a user!" +
+                                                "\nName: " + fibaUser.getDisplayName() +
+                                                "\nEmail: " + fibaUser.getEmail() +
+                                                "\nPhoneNumber: " + fibaUser.getPhoneNumber() +
+                                                "\nUid: " + fibaUser.getUid()
+                                );
+                                userName.setText("");
+                                number.setText("");
+                                email.setText("");
+                                pass.setText("");
+                                Toast.makeText(
+                                        SignUp.this,
+                                        "Welcome to the app " + fibaUser.getDisplayName() + "!",
+                                        Toast.LENGTH_SHORT).show();
+                                showMenuActivity(fibaUser);
+                            }
+                    );
+                } catch (AuthenticationHelper.AuthenticatedUserIsPresent e) {
+                    Log.w("sign up", e.getMessage());
+                    showMenuActivity(e.user);
+                }
             }
         });
         login=findViewById(R.id.loginAcc);
@@ -78,24 +114,24 @@ public class SignUp extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        signUpAcc = findViewById(R.id.btnSignUpAcc);
-        signUpAcc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(SignUp.this, MenuActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
-    private boolean checkUser(DataSnapshot snapshot,String user) {
-        String user1;
-        for (DataSnapshot ds: snapshot.getChildren()){
-            user1 =ds.child("userName").getValue(String.class);
-            if (user.equals(user1)){
-                return false;
-            }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        showMenuActivityIfAuth();
+    }
+
+    void showMenuActivityIfAuth() {
+        try {
+            showMenuActivity(AuthenticationHelperImpl.getInstance().getUser());
+        } catch (AuthenticationHelper.UnauthenticatedUserException e) {
+            // Do nothing
         }
-        return true;
+    }
+
+    void showMenuActivity(User user) {
+        Log.w("user", user.toString());
+        startActivity(new Intent(SignUp.this, MenuActivity.class));
     }
 }

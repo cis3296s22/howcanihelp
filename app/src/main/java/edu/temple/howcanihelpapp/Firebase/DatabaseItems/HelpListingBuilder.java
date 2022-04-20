@@ -2,12 +2,13 @@ package edu.temple.howcanihelpapp.Firebase.DatabaseItems;
 
 import java.util.Date;
 
+import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 
 public class HelpListingBuilder {
     protected HelpListing helpListing;
 
-    public HelpListingBuilder() {
+    public HelpListingBuilder() throws AuthenticationHelper.UnauthenticatedUserException {
         this.helpListing = new HelpListing();
         // Set the expected values.
         {
