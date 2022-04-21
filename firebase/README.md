@@ -7,3 +7,9 @@ Run a local firebase instance for testing purposes.
 ```bash
 firebase emulators:start
 ```
+
+Deploy:
+- database rules
+```bash
+firebase deploy
+```
