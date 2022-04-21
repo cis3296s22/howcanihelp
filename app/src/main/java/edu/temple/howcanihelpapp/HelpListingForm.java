@@ -1,5 +1,7 @@
 package edu.temple.howcanihelpapp;
 
+import static java.lang.Math.random;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,10 +59,16 @@ abstract public class HelpListingForm extends AppCompatActivity {
 
     private void donateItem() {
         try {
+            final double SAMPLE_LAT = 39.975794;
+            final double SAMPLE_LNG = -75.165123;
+            double randLat =  Math.random()*0.03;
+            double randLNG = Math.random()*0.02;
             HelpListingBuilder helpListingBuilder = new HelpListingBuilder().setAsDonor()
                     .setTitle(title.getText().toString())
                     .setDescription(description.getText().toString())
-                    .setLocation(new HelpListing.Location(address.getText().toString(), 0, 0))
+                    .setLocation(new HelpListing.Location(address.getText().toString(),
+                            SAMPLE_LAT + randLat,
+                            SAMPLE_LNG + randLNG))
                     .setIsUrgent(isUrgent.isChecked())
                     .setCanRelocate(canRelocate.isChecked());
             if(isRequest)
