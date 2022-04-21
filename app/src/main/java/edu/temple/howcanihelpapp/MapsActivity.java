@@ -21,6 +21,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingDbRef;
 import edu.temple.howcanihelpapp.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends AppCompatActivity implements
@@ -29,7 +34,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     // for location purposes
     private GoogleMap gMap;
-
+    List<CustomMarker> customMarkers;
 
     @Override
     public void onBackPressed() {
@@ -49,6 +54,7 @@ public class MapsActivity extends AppCompatActivity implements
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
+        customMarkers = new ArrayList<>();
     }
 
     /**
@@ -83,20 +89,29 @@ public class MapsActivity extends AppCompatActivity implements
         RequestInfoAdapter adapter = new RequestInfoAdapter(MapsActivity.this);
         gMap.setInfoWindowAdapter(adapter);
 
-        /**
-         *  FOR TESTING PURPOSES, GATHER DATA FROM DATABASE
-         */
-        RequestInfoPost recipient = new RequestInfoPost(
-                "looking for food", 39.975794, -75.165123,
-                "10:53AM 04/11/2022", true, false
-        );
-        RequestInfoPost donor = new RequestInfoPost(
-                "canned food items", 39.983645, -75.156856,
-                "01:30PM 04/11/2022", false, true
-        );
-        DonorMarker d1 = new DonorMarker(gMap, donor);
-        RecipientMarker r1 = new RecipientMarker(gMap, recipient);
-
+        HelpListingDbRef.getHelpListings(25, helpListingMap -> {
+            Toast.makeText(MapsActivity.this, "There are " + helpListingMap.size() +
+                    " listings in your area.", Toast.LENGTH_SHORT).show();
+            if(helpListingMap.size() == 0)
+                return;
+            helpListingMap.forEach((key, helpListing) -> {
+                // TODO: key is the identifier of the help listing from the database
+                if(helpListing.isRequest)
+                    customMarkers.add(new RecipientMarker(gMap, new RequestInfoPost(
+                            helpListing.title, helpListing.location.latitude,
+                            helpListing.location.longitude,
+                            new Date(helpListing.timePostedMs).toString(),
+                            helpListing.isUrgent, helpListing.canRelocate
+                    )));
+                else
+                    customMarkers.add(new DonorMarker(gMap, new RequestInfoPost(
+                            helpListing.title, helpListing.location.latitude,
+                            helpListing.location.longitude,
+                            new Date(helpListing.timePostedMs).toString(),
+                            helpListing.isUrgent, helpListing.canRelocate
+                    )));
+            });
+        });
     }
 
     @Override

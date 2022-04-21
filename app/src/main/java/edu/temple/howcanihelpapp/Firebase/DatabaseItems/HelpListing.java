@@ -7,14 +7,14 @@ public class HelpListing {
     @IgnoreExtraProperties
     public static class Location {
         public String address;
-        public float latitude;
-        public float longitude;
+        public double latitude;
+        public double longitude;
 
         public Location() {
 
         }
 
-        public Location(String address, float latitude, float longitude) {
+        public Location(String address, double latitude, double longitude) {
             this.address = address;
             this.latitude = latitude;
             this.longitude = longitude;
