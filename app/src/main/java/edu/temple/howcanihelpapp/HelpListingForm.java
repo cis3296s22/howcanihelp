@@ -29,8 +29,7 @@ abstract public class HelpListingForm extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(HelpListingForm.this, DonationsActivity.class);
-                startActivity(i);
+                onBack(view);
             }
         });
 
