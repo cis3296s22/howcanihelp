@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"edu.temple.howcanihelpapp"},{"l":"edu.temple.howcanihelpapp.Firebase"},{"l":"edu.temple.howcanihelpapp.Firebase.DatabaseItems"},{"l":"edu.temple.howcanihelpapp.Sql"}]

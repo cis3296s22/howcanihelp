@@ -34,7 +34,7 @@ public interface AuthenticationHelper {
      * @param name
      * @param phoneNumber
      * @param createUserHandler
-     * @throws Exception
+     * @throws AuthenticatedUserIsPresent
      */
     public void createUser(String email, String password, String name, String phoneNumber, OnCompleteHandler<CreateUserResult> createUserHandler) throws AuthenticatedUserIsPresent;
 
