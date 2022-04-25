@@ -4,17 +4,14 @@ import static org.junit.Assert.*;
 
 import android.util.Log;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListing;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
@@ -61,44 +58,19 @@ public class FirebaseTest {
         }
     }
 
-    @Before
-    public void resetAuth() throws Exception {
-        CompletableFuture<Boolean> signOutRes = new CompletableFuture<>();
-        AuthenticationHelper authenticationHelper = AuthenticationHelperImpl.getInstance();
+    AuthenticationHelper authenticationHelper;
 
-        if(!authenticationHelper.isAuthenticated())
-            return;
-        else
-            FirebaseAuth.getInstance().getCurrentUser().delete();
-
-        authenticationHelper.signOut(result -> signOutRes.complete(result));
-
-        if(!signOutRes.get()) {
-            fail("Could not sign the user out!\nUser: " + authenticationHelper.getUser().toString());
-        }
-    }
-
-    /**
-     * Tests the following:
-     * - Creating a user with email and password.
-     * - Signing them out.
-     * - Signing them back in.
-     * @throws Exception
-     */
-    @Test
-    public void testAuthenticationHelper() throws Exception {
+    UserI createUser() throws Exception {
         CompletableFuture<CreateUserResult> createRes = new CompletableFuture<>();
-        AuthenticationHelper authHelper = AuthenticationHelperImpl.getInstance();
-        assertTrue("Expect no user to be authenticated before attempting to create a user.", !authHelper.isAuthenticated());
-
         UserI user = new UserI();
-        authHelper.createUser(
+        authenticationHelper.createUser(
                 user.getEmail(),
                 user.getPassword(),
                 user.getDisplayName(),
                 user.getPhoneNumber(),
                 result -> createRes.complete(result)
         );
+
 
         CreateUserResult res = createRes.get();
         if(res.isSuccessful()) {
@@ -128,18 +100,69 @@ public class FirebaseTest {
             }
             fail("Unsuccessful in creating a user!");
         }
+        return  user;
+    }
+
+    @Before
+    public void resetAuth() throws Exception {
+        authenticationHelper = AuthenticationHelperImpl.getInstance();
+        CompletableFuture<Boolean> signOutRes = new CompletableFuture<>();
+
+        if(!authenticationHelper.isAuthenticated())
+            return;
+        else
+            FirebaseAuth.getInstance().getCurrentUser().delete();
+
+        authenticationHelper.signOut(result -> signOutRes.complete(result));
+
+        if(!signOutRes.get()) {
+            fail("Could not sign the user out!\nUser: " + authenticationHelper.getUser().toString());
+        }
+    }
+
+    /**
+     * Tests creating a user with email and password.
+     * @throws Exception
+     */
+    @Test
+    public void testCreateUser() throws Exception {
+        assertTrue("Expect no user to be authenticated before attempting to create a user.", !authenticationHelper.isAuthenticated());
+        createUser();
+    }
+
+    /**
+     * Tests signing a user out.
+     * @throws Exception
+     */
+    @Test
+    public void testSignOut() throws Exception {
+        if(!authenticationHelper.isAuthenticated()) {
+            createUser();
+        }
 
         CompletableFuture<Boolean> signOutResFuture = new CompletableFuture<>();
-        authHelper.signOut((result) -> {
+        authenticationHelper.signOut((result) -> {
             Log.d("signOutRes", String.valueOf(result));
             signOutResFuture.complete(result);
         });
-        assertTrue(signOutResFuture.get());
+        assertTrue("Expected the sign out to be successful.", signOutResFuture.get());
+    }
+
+    /**
+     * Tests signing a user back in after signing them out.
+     * @throws Exception
+     */
+    @Test
+    public void testSignIn() throws Exception {
+        UserI userI = null;
+        if(!authenticationHelper.isAuthenticated())
+            userI = createUser();
+        testSignOut();
 
         CompletableFuture<SignInResult> signInResFuture = new CompletableFuture<>();
-        authHelper.signIn(
-                user.getEmail(),
-                user.getPassword(),
+        authenticationHelper.signIn(
+                userI.getEmail(),
+                userI.getPassword(),
                 result -> signInResFuture.complete(result)
         );
 
@@ -148,26 +171,7 @@ public class FirebaseTest {
             fail("Expected the sign in to be successful. Reason: " + signInResult.getFailReason().toString());
     }
 
-    /**
-     * Test if a user can put an item in the database.
-     */
-    @Test
-    public void RealtimeDatabaseTest() throws Exception {
-        AuthenticationHelper auth = AuthenticationHelperImpl.getInstance();
-        UserI userI = new UserI();
-        CompletableFuture<CreateUserResult> createUserRes = new CompletableFuture<>();
-        auth.createUser(
-                userI.getEmail(),
-                userI.getPassword(),
-                userI.getDisplayName(),
-                userI.getPhoneNumber(),
-                result -> createUserRes.complete(result)
-        );
-
-        CreateUserResult res = createUserRes.get();
-        if(!res.isSuccessful())
-            fail("Failed before database testing started.");
-
+    DatabaseSetResult<HelpListingDbRef> pushToDatabase() throws Exception {
         HelpListing helpListing = new HelpListingBuilder()
                 .setTitle("canned food")
                 .setDescription("I want canned food.")
@@ -190,7 +194,27 @@ public class FirebaseTest {
         HelpListing gettedHelpListing = res1.getSetData().get();
         assertEquals("Title is the same", gettedHelpListing.title, helpListing.title);
         assertEquals("UID is the same", gettedHelpListing.uid, helpListing.uid);
+        return res1;
+    }
 
+    /**
+     * Test if a user can put an item in the database.
+     */
+    @Test
+    public void testPushToDatabase() throws Exception {
+        createUser();
+        pushToDatabase();
+    }
+
+    /**
+     * Tests if a user can updated an item in the database.
+     * @throws Exception
+     */
+    @Test
+    public void testUpdateOnDatabase() throws Exception {
+        createUser();
+        DatabaseSetResult<HelpListingDbRef> res1 = pushToDatabase();
+        HelpListing helpListing = res1.getSetData().get();
         // Test again
         CompletableFuture<DatabaseSetResult<HelpListingDbRef>> databasePushResult2 = new CompletableFuture<>();
 
@@ -199,13 +223,13 @@ public class FirebaseTest {
                     @Override
                     public void builder(HelpListingBuilder update) {
                         update
-                            .setTitle("Bagged Food")
-                            .setDescription("I wanted to say bagged food.")
-                            .setAsRequest()
-                            .setIsUrgent(true)
-                            .setCanRelocate(false)
-                            .setLocation(new HelpListing.Location("IT is here actually",
-                                    -1,1));
+                                .setTitle("Bagged Food")
+                                .setDescription("I wanted to say bagged food.")
+                                .setAsRequest()
+                                .setIsUrgent(true)
+                                .setCanRelocate(false)
+                                .setLocation(new HelpListing.Location("IT is here actually",
+                                        -1,1));
                     }
                 });
         String oldKey = res1.getSetData().getKey();
@@ -216,18 +240,35 @@ public class FirebaseTest {
                 databasePushResult2.get().getSetData().getKey(), oldKey);
         assertEquals("Expected the updated item to have an updated title",
                 databasePushResult2.get().getSetData().get().title, "Bagged Food");
+    }
 
-        CompletableFuture<Void> isDone3 = new CompletableFuture<>();
-        HelpListingDbRef.getRequestListings(10, new HelpListingDbRef.GetHelpListingsListener() {
+    /**
+     * Tests if a user can fetch from the database.
+     * @throws Exception
+     */
+    @Test
+    public void testFetchFromDatabase() throws Exception {
+        createUser();
+        DatabaseSetResult<HelpListingDbRef> dbRefDatabaseSetResult = pushToDatabase();
+        CompletableFuture<Boolean> isDone3 = new CompletableFuture<>();
+        HelpListingDbRef.getHelpListings(100, new HelpListingDbRef.GetHelpListingsListener() {
             @Override
             public void onComplete(Map<String, HelpListing> helpListingMap) {
                 assertNotNull(helpListingMap);
+                AtomicBoolean found = new AtomicBoolean(false);
+                String lookingForKey = dbRefDatabaseSetResult.getSetData().getKey();
+                Log.i("Fetch from database", "Looking for data with key: " + lookingForKey);
                 helpListingMap.forEach((key, val) -> {
-                    Log.d("dfada", "Key: " + key + " | Value: " + val.title + " | isRequest: " + Boolean.toString(val.isRequest));
+                    Log.i("Fetch from database", "Key: " + key + " | Value: " + val.title + " | isRequest: " + Boolean.toString(val.isRequest));
+                    if(key.equals(lookingForKey)) {
+                        Log.i("Fetch from database", "Found the key.");
+                        found.set(true);
+                    }
                 });
-                isDone3.complete(null);
+                isDone3.complete(found.get());
             }
         });
-        isDone3.get();
+        assertTrue("Expected the pushed data to be fetched from the database.", isDone3.get());
     }
+
 }
