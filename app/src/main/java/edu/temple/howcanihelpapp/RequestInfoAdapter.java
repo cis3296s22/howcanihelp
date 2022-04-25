@@ -10,17 +10,38 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+/**
+ *  The purpose of this adapter class is to fit a layout for the information window
+ *  that appears when the user interacts with a select Donor or Recipient marker on Google Maps
+ */
 public class RequestInfoAdapter implements GoogleMap.InfoWindowAdapter {
+    /**
+     *  context is necessary for keeping a reference to the class that calls RequestInfoAdapter
+     */
     private Activity context;
 
+    /**
+     * Constructor for RequestInfoAdapter, passes context
+     * @param context
+     */
     public RequestInfoAdapter(Activity context) {
         this.context = context;
     }
 
-    // for Google Maps adapter
+    /**
+     * Part of the Google Maps InfoWindowAdapter interface, provides contents for the
+     * information window. All contents that are passed from marker shown using TextView
+     * variables. Information is passed to a RequestInfoPost; the method returns a View
+     *
+     * @param marker
+     * @return
+     */
     @Nullable
     @Override
     public View getInfoContents(@NonNull Marker marker) {
+        /**
+         *  from the context, we pass in the info window layout for the adapter
+         */
         View view = context.getLayoutInflater().inflate(R.layout.infowindow, null);
 
         TextView infoItem = (TextView) view.findViewById(R.id.info_item);
@@ -41,6 +62,13 @@ public class RequestInfoAdapter implements GoogleMap.InfoWindowAdapter {
         return view;
     }
 
+    /**
+     * Part of the Google Maps InfoWindowAdapter interface, provides a info window for
+     * the select marker.
+     *
+     * @param marker
+     * @return
+     */
     @Nullable
     @Override
     public View getInfoWindow(@NonNull Marker marker) {

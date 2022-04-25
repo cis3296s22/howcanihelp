@@ -9,10 +9,7 @@ import com.google.android.gms.maps.model.Marker;
 public class RecipientMarker extends CustomMarker {
     /**
      * The purpose of this class is to extend CustomMarker and make it specific to Recipients on
-     * the map.
-     */
-    /**
-     * Marker m will be the marker taken from CustomMarker
+     * the map. Marker m will be the marker taken from CustomMarker (the parent class of RecipientMarker)
      */
     Marker m;
 
@@ -29,7 +26,8 @@ public class RecipientMarker extends CustomMarker {
 
     /**
      * getIcon() returns a BitmapDescriptor. The purpose is to get a marker to use in the map
-     * layout
+     * layout, which will be defined by whether the request is from a Donor or Recipient, and
+     * if the posting in question is an urgent post
      * @return BitmapDescriptorFactory.fromResource(c)
      */
     private BitmapDescriptor getIcon() {
@@ -44,32 +42,36 @@ public class RecipientMarker extends CustomMarker {
     public String getTitle() {
         return "Need: " + super.getTitle();
     }
+
     /**
-     * getDateTime() returns a String that is the date and time of rip
+     * getDateTime() returns a String that is the date and time of the RequestInfoPost
      * @return rip.dateTimePosted
      */
     @Override
     public String getDateTime() {
         return super.getDateTime();
     }
+
     /**
-     * getCoordinates() returns a Latlng that is coordinates from rip
+     * getCoordinates() returns a Latlng that is coordinates from the RequestInfoPost
      * @return rip.latlng
      */
     @Override
     public LatLng getCoordinates() {
         return super.getCoordinates();
     }
+
     /**
-     * isUrgent() returns a boolean for whether or not rip is urgent
+     * isUrgent() returns a boolean for whether or not the marker is urgent
      * @return rip.urgent
      */
     @Override
     public boolean isUrgent() {
         return super.isUrgent();
     }
+
     /**
-     * canRelocate() return a boolean if rip is able to relocate
+     * canRelocate() return a boolean if the owner of the marker is able to relocate
      * @return rip.ableToRelocate
      */
     @Override

@@ -12,8 +12,9 @@ import java.util.Objects;
  */
 public class CustomMarker {
     /**
-     * gMap is GoogleMap instance, rip is a RequestInfoPost instance. marker is a Marker instance.
-     *
+     * gMap is GoogleMap instance
+     * rip is a RequestInfoPost instance
+     * marker is a Marker instance
      */
     GoogleMap gMap;
     RequestInfoPost rip;
@@ -42,41 +43,46 @@ public class CustomMarker {
     }
 
     /**
-     * getTitle() returns a String that is the title from rip
+     * getTitle() returns a String that is the title from RequestInfoPost
      * @return rip.title
      */
     public String getTitle() {
         return rip.title;
     }
+
     /**
-     * getDateTime() returns a String that is the date and time of rip
+     * getDateTime() returns a String that is the date and time of RequestInfoPost
      * @return rip.dateTimePosted
      */
     public String getDateTime() {
         return rip.dateTimePosted;
     }
+
     /**
-     * getCoordinates() returns a Latlng that is coordinates from rip
+     * getCoordinates() returns a Latlng that is coordinates from RequestInfoPost
      * @return rip.latlng
      */
     public LatLng getCoordinates() {
         return rip.latlng;
     }
 
+
     /**
-     * isUrgent() returns a boolean for whether or not rip is urgent
+     * isUrgent() returns a boolean for whether or not posting is urgent
      * @return rip.urgent
      */
     public boolean isUrgent() {
         return rip.urgent;
     }
 
+
     /**
-     * canRelocate() return a boolean if rip is able to relocate
+     * canRelocate() return a boolean if owner of marker can relocate
      * @return rip.ableToRelocate
      */
     public boolean canRelocate() {
         return rip.ableToRelocate;
     }
+
 }
 

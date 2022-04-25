@@ -17,10 +17,10 @@ import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
  */
 public class MenuActivity extends AppCompatActivity {
     /**
-     * request and donate are buttons with various purposes
-     * mapbtn and logout are ImageButtons
-     * welcomeUser is a TextView
-     * sb is a StringBuilder
+     * request and donate are buttons with the purposes of either creating a request or making a donation
+     * mapbtn is an ImageButton that provides access to a Google Maps implemented activity
+     * welcomeUser is a TextView that displays the user's name as a greeting
+     * sb is a StringBuilder that is used to create the aforementioned greeting
      */
     Button request, donate;
     ImageButton mapbtn, logout;
