@@ -28,26 +28,40 @@ import java.util.List;
 import edu.temple.howcanihelpapp.Firebase.DatabaseItems.HelpListingDbRef;
 import edu.temple.howcanihelpapp.databinding.ActivityMapsBinding;
 
+/**
+ *  The purpose of the MapsActivity is to assemble a Google Maps implementation for Android
+ *  The activity provides an overview of what is available location-wise for convenience of user
+ */
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
-    // for location purposes
+    /**
+     *  gMap is a Google Maps instance
+     *  customMarkers provides a List of markers, assumed to be pulled from database
+     */
     private GoogleMap gMap;
     List<CustomMarker> customMarkers;
 
+    /**
+     *  Part of AppCompatActivity, backing out of activity
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
+    /**
+     * Part of AppCompatActivity, creates activity
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         edu.temple.howcanihelpapp.databinding.ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -66,6 +80,11 @@ public class MapsActivity extends AppCompatActivity implements
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    /**
+     * Part of Google Maps OnMapReadyCallback, creates the instance of Google maps onto the activity
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
@@ -79,9 +98,7 @@ public class MapsActivity extends AppCompatActivity implements
         gMap.setOnMarkerClickListener(this);
 
         // set map camera/zoom preferences for map
-        /**
-         *  Location hardcoded to Philadelphia, need to fix this later...
-         */
+        // Location hardcoded to Philadelphia, need to fix this later...
         gMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(39.980002, -75.155953)));
         gMap.setMinZoomPreference(13);
 
@@ -114,6 +131,15 @@ public class MapsActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Part of GoogleMap.OnMarkerClickListener, provides event listener when user
+     * clicks on the selected marker. When user engages, the marker will display
+     * a bubble above, showing the information window containing the title, date
+     * and time, location, and other important factors.
+     *
+     * @param marker
+     * @return
+     */
     @Override
     public boolean onMarkerClick(@NonNull final Marker marker) {
         assert marker.getTag() != null;
@@ -121,6 +147,12 @@ public class MapsActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * Part of GoogleMap.OnInfoWindowClickListener, provides event listener
+     * when the user clicks on the info window. Redirects to Post Activity
+     *
+     * @param marker
+     */
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         RequestInfoPost clicked = (RequestInfoPost) marker.getTag();
@@ -131,11 +163,25 @@ public class MapsActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    /**
+     * Part of GoogleMap.OnMyLocationButtonClickListener, event listener for user
+     * to locate present location. Location button is provided when the user enables
+     * location permissions via Android
+     *
+     * @return
+     */
     @Override
     public boolean onMyLocationButtonClick() {
         return false;
     }
 
+    /**
+     * Part of GoogleMap.OnMyLocationClickListener, event listener for user to engage
+     * with current location marker (blue); this implementation returns a toast message
+     * explaining the current coordinates of the user.
+     *
+     * @param location
+     */
     @Override
     public void onMyLocationClick(@NonNull Location location) {
         Toast.makeText(this, "Current location:\n" + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_LONG).show();

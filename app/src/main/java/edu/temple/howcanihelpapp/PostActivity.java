@@ -13,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class PostActivity extends AppCompatActivity {
     /**
-     * title, dt, r, and r are TextViews
-     * makeRequest is a Button with a function
+     * title is a TextView that displays the title from the RequestInfoPost that the marker contains
+     * dt is the TextView that displays the date and time posted from RequestInfoPost
+     * u is the TextView that displays whether the posting is urgent, from RequestInfoPost
+     * r is the TextView that displays whether the owner is able to relocate, from RequestInfoPost
+     * makeRequest is a Button with the function of confirming the request if user decides to proceed
      */
     TextView title, dt, u, r;
     Button makeRequest;
