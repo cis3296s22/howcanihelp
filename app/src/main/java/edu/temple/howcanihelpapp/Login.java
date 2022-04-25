@@ -15,13 +15,24 @@ import edu.temple.howcanihelpapp.Firebase.AuthenticationHelper;
 import edu.temple.howcanihelpapp.Firebase.AuthenticationHelperImpl;
 import edu.temple.howcanihelpapp.Firebase.User;
 
+/**
+ * The purpose of this class is to crete the login page with the activity_login.xml as the layout
+ */
 public class Login extends AppCompatActivity {
+    /**
+     * userNamer and password are EditText fields that can take in information
+     * btnSubmit is a Button that can be clicked
+     * createAcc is a TextView
+     */
     EditText userName, password;
     Button btnSubmit;
     TextView createAcc;
 
 
     @Override
+    /**
+     * onCreate(...) doesn't return anything. Its purpose is to build the Login page.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -31,6 +42,10 @@ public class Login extends AppCompatActivity {
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
+            /**
+             * OnClick doesn't return anything. Its purpose is to login the user with their
+             * username and password.
+             */
             public void onClick(View view) {
                 String userNameVal = userName.getText().toString();
                 String passwordVal = password.getText().toString();
@@ -71,6 +86,9 @@ public class Login extends AppCompatActivity {
         createAcc=findViewById(R.id.createAcc);
         createAcc.setOnClickListener(new View.OnClickListener() {
             @Override
+            /**
+             * onClick doesn't return anything. Its purpose is to start the activity of intent.
+             */
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this,SignUp.class);
                 startActivity(intent);
@@ -79,11 +97,17 @@ public class Login extends AppCompatActivity {
     }
 
     @Override
+    /**
+     * onStart() doesn't return anything. Its purpose is to start the activity
+     */
     protected void onStart() {
         super.onStart();
         showMenuActivityIfAuth();
     }
 
+    /**
+     * showMenuActivityIfAuth() doesn't return anything. Its purpose is to authenticate
+     */
     void showMenuActivityIfAuth() {
         try {
             showMenuActivity(AuthenticationHelperImpl.getInstance().getUser());
@@ -92,6 +116,11 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /**
+     * showMenuActivity(...) doesn't return anything. Its purpose is to start the activity of
+     * intent
+     * @param user is a User
+     */
     void showMenuActivity(User user) {
         Log.w("user", user.toString());;
         startActivity(new Intent(Login.this, MenuActivity.class));
